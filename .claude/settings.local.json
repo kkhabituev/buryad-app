@@ -13,7 +13,9 @@
       "PowerShell(New-Item -ItemType Directory -Path \"C:\\\\Users\\\\ROG\\\\buryad-build\\\\types\" -Force)",
       "PowerShell(Copy-Item \"C:\\\\Users\\\\ROG\\\\Documents\\\\!projects\\\\05_assorted\\\\BuryadHelenApp\\\\types\\\\css.d.ts\" -Destination \"C:\\\\Users\\\\ROG\\\\buryad-build\\\\types\\\\css.d.ts\" -Force)",
       "PowerShell(Copy-Item \"C:\\\\Users\\\\ROG\\\\Documents\\\\!projects\\\\05_assorted\\\\BuryadHelenApp\\\\tsconfig.json\" -Destination \"C:\\\\Users\\\\ROG\\\\buryad-build\\\\tsconfig.json\" -Force)",
-      "PowerShell(\"Copied\")"
+      "PowerShell(\"Copied\")",
+      "Bash(gh repo *)",
+      "Bash(npx vercel *)"
     ]
   }
 }

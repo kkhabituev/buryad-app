@@ -4,41 +4,41 @@ const sections = [
   {
     href: "/grammar",
     title: "Грамматика",
-    titleBuryat: "Хэлэ зүй",
-    description: "Местоимения, глаголы, притяжательные формы",
+    sub: "Хэлэ зүй",
+    desc: "Местоимения, глаголы и формы",
     emoji: "📚",
-    color: "#1e3a5f",
-    textColor: "white",
+    gradient: "linear-gradient(140deg, #1d4ed8 0%, #1e3a5f 100%)",
+    glow: "#1d4ed8",
     available: true,
   },
   {
     href: "/numbers",
     title: "Числа",
-    titleBuryat: "Тоонууд",
-    description: "Единицы, десятки, как спросить возраст",
+    sub: "Тоонууд",
+    desc: "От 1 до миллиона",
     emoji: "🔢",
-    color: "#c9853a",
-    textColor: "white",
+    gradient: "linear-gradient(140deg, #f97316 0%, #dc2626 100%)",
+    glow: "#f97316",
+    available: true,
+  },
+  {
+    href: "/practice",
+    title: "Практика",
+    sub: "Дасхал",
+    desc: "Карточки для заучивания",
+    emoji: "⭐",
+    gradient: "linear-gradient(140deg, #f59e0b 0%, #d97706 100%)",
+    glow: "#f59e0b",
     available: true,
   },
   {
     href: "/vocabulary",
     title: "Словарь",
-    titleBuryat: "Үгын сан",
-    description: "Животные, цвета, еда и многое другое",
+    sub: "Үгын сан",
+    desc: "Слова по темам",
     emoji: "📖",
-    color: "white",
-    textColor: "#1e3a5f",
-    available: false,
-  },
-  {
-    href: "/phrasebook",
-    title: "Разговорник",
-    titleBuryat: "Хэлэлсэгшэ",
-    description: "Приветствия, за столом, в пути",
-    emoji: "💬",
-    color: "white",
-    textColor: "#1e3a5f",
+    gradient: "linear-gradient(140deg, #e2e8f0 0%, #cbd5e1 100%)",
+    glow: "#94a3b8",
     available: false,
   },
 ];
@@ -46,141 +46,177 @@ const sections = [
 export default function HomePage() {
   return (
     <div className="page-enter">
-      {/* Hero */}
+      {/* HERO */}
       <div
         className="relative overflow-hidden"
         style={{
-          background: "linear-gradient(160deg, #1e3a5f 0%, #2d5485 60%, #1e3a5f 100%)",
+          background: "linear-gradient(160deg, #0f172a 0%, #1e3a5f 45%, #1d4ed8 100%)",
           paddingTop: "env(safe-area-inset-top)",
         }}
       >
-        {/* Decorative pattern */}
+        {/* Glowing orbs */}
         <div
-          className="absolute inset-0 opacity-10"
+          className="absolute"
           style={{
-            backgroundImage: `radial-gradient(circle at 20% 80%, #c9853a 0%, transparent 50%),
-                              radial-gradient(circle at 80% 20%, #c9853a 0%, transparent 40%)`,
+            top: -60,
+            right: -40,
+            width: 200,
+            height: 200,
+            borderRadius: "50%",
+            background: "radial-gradient(circle, rgba(245,158,11,0.25), transparent 70%)",
           }}
         />
         <div
-          className="absolute top-0 right-0 w-48 h-48 opacity-5"
+          className="absolute"
           style={{
-            background: "radial-gradient(circle, white, transparent)",
-            transform: "translate(30%, -30%)",
+            bottom: -30,
+            left: -30,
+            width: 160,
+            height: 160,
+            borderRadius: "50%",
+            background: "radial-gradient(circle, rgba(59,130,246,0.3), transparent 70%)",
           }}
         />
 
-        <div className="relative px-5 pt-12 pb-10">
-          {/* Ornament */}
-          <div className="flex items-center gap-2 mb-3">
-            <div className="h-px flex-1" style={{ background: "rgba(201,133,58,0.5)" }} />
-            <span className="text-lg" style={{ color: "#c9853a" }}>✦</span>
-            <div className="h-px flex-1" style={{ background: "rgba(201,133,58,0.5)" }} />
+        <div className="relative px-5 pt-14 pb-10">
+          {/* Badge */}
+          <div
+            className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full mb-4 text-xs font-bold"
+            style={{ background: "rgba(245,158,11,0.2)", color: "#fbbf24", border: "1px solid rgba(245,158,11,0.3)" }}
+          >
+            <span>🌊</span> Язык народа Байкала
           </div>
 
           <h1
-            className="text-3xl font-bold text-white mb-1 leading-tight"
+            className="text-4xl font-bold text-white leading-tight mb-1"
             style={{ fontFamily: '"Playfair Display", Georgia, serif' }}
           >
             Буряад хэлэн
           </h1>
-          <p className="text-base font-semibold" style={{ color: "#c9853a" }}>
+          <p className="text-base font-semibold mb-1" style={{ color: "#fbbf24" }}>
             Учим бурятский вместе
           </p>
-          <p className="text-sm mt-2" style={{ color: "rgba(255,255,255,0.65)" }}>
-            Язык народа Байкала
+          <p className="text-sm" style={{ color: "rgba(255,255,255,0.5)" }}>
+            Интерактивно · С нуля · Бесплатно
           </p>
 
-          <div className="flex items-center gap-2 mt-4">
-            <div className="h-px flex-1" style={{ background: "rgba(201,133,58,0.5)" }} />
-            <span className="text-lg" style={{ color: "#c9853a" }}>✦</span>
-            <div className="h-px flex-1" style={{ background: "rgba(201,133,58,0.5)" }} />
+          {/* Mini stats */}
+          <div className="flex gap-3 mt-5">
+            {[
+              { icon: "🔥", value: "0", label: "дней подряд" },
+              { icon: "⭐", value: "6", label: "наборов карточек" },
+              { icon: "📝", value: "50+", label: "слов" },
+            ].map((s) => (
+              <div
+                key={s.label}
+                className="flex-1 rounded-2xl px-3 py-2.5 text-center"
+                style={{ background: "rgba(255,255,255,0.08)", border: "1px solid rgba(255,255,255,0.1)" }}
+              >
+                <div className="text-lg leading-none mb-0.5">{s.icon}</div>
+                <div className="text-base font-bold text-white leading-none">{s.value}</div>
+                <div className="text-[10px] mt-0.5" style={{ color: "rgba(255,255,255,0.5)" }}>
+                  {s.label}
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       </div>
 
-      {/* Sections grid */}
-      <div className="px-4 pt-6 pb-4">
-        <p className="text-xs font-bold uppercase tracking-widest mb-4" style={{ color: "#9b8e7f" }}>
+      {/* SECTIONS */}
+      <div className="px-4 pt-5 pb-6">
+        <p
+          className="text-xs font-bold uppercase tracking-widest mb-3"
+          style={{ color: "#94a3b8" }}
+        >
           Разделы
         </p>
 
         <div className="grid grid-cols-2 gap-3">
-          {sections.map((section) => (
+          {sections.map((s) => (
             <Link
-              key={section.href}
-              href={section.available ? section.href : "#"}
-              className={`relative rounded-2xl p-4 transition-all duration-200 card-shadow ${
-                section.available ? "active:scale-95 active:opacity-80" : "cursor-default"
+              key={s.href}
+              href={s.available ? s.href : "#"}
+              className={`relative rounded-2xl p-4 transition-all duration-200 ${
+                s.available ? "active:scale-95" : "cursor-default"
               }`}
               style={{
-                background: section.color,
-                border: section.color === "white" ? "2px solid #e8e0d5" : "none",
-                minHeight: 140,
+                background: s.gradient,
+                boxShadow: s.available ? `0 4px 20px -6px ${s.glow}66` : "none",
+                minHeight: 148,
                 display: "flex",
                 flexDirection: "column",
                 justifyContent: "space-between",
               }}
             >
-              {!section.available && (
+              {!s.available && (
                 <div
-                  className="absolute top-2.5 right-2.5 text-xs font-bold px-2 py-0.5 rounded-full"
-                  style={{ background: "#f5e6d3", color: "#c9853a" }}
+                  className="absolute inset-0 rounded-2xl"
+                  style={{ background: "rgba(248,250,255,0.5)" }}
+                />
+              )}
+              {!s.available && (
+                <div
+                  className="absolute top-2.5 right-2.5 text-xs font-bold px-2 py-0.5 rounded-full z-10"
+                  style={{ background: "rgba(148,163,184,0.2)", color: "#64748b" }}
                 >
                   Скоро
                 </div>
               )}
 
-              <div>
-                <div className="text-2xl mb-2">{section.emoji}</div>
+              <div className="relative z-10">
+                <span className="text-3xl block mb-2">{s.emoji}</span>
                 <div
                   className="text-base font-bold leading-tight"
                   style={{
-                    color: section.textColor,
+                    color: s.available ? "white" : "#64748b",
                     fontFamily: '"Playfair Display", Georgia, serif',
                   }}
                 >
-                  {section.title}
+                  {s.title}
                 </div>
                 <div
-                  className="text-xs mt-0.5 font-semibold"
-                  style={{
-                    color:
-                      section.color === "white"
-                        ? "#c9853a"
-                        : "rgba(255,255,255,0.7)",
-                  }}
+                  className="text-xs font-bold mt-0.5"
+                  style={{ color: s.available ? "rgba(255,255,255,0.65)" : "#94a3b8" }}
                 >
-                  {section.titleBuryat}
+                  {s.sub}
                 </div>
               </div>
 
               <p
-                className="text-xs leading-snug mt-2"
-                style={{
-                  color:
-                    section.color === "white"
-                      ? "#7a6a56"
-                      : "rgba(255,255,255,0.8)",
-                }}
+                className="relative z-10 text-xs leading-snug mt-2"
+                style={{ color: s.available ? "rgba(255,255,255,0.8)" : "#94a3b8" }}
               >
-                {section.description}
+                {s.desc}
               </p>
             </Link>
           ))}
         </div>
 
-        {/* Bottom note */}
+        {/* PROMO BLOCK */}
         <div
-          className="mt-6 rounded-2xl p-4 text-center"
-          style={{ background: "#f0ede6" }}
+          className="mt-4 rounded-2xl p-4 flex items-center gap-4"
+          style={{
+            background: "linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%)",
+            border: "1.5px solid #a7f3d0",
+          }}
         >
-          <p className="text-sm" style={{ color: "#7a6a56" }}>
-            🌊 Бурятский язык — язык берегов Байкала.
-          </p>
-          <p className="text-xs mt-1" style={{ color: "#9b8e7f" }}>
-            Учите по 10 минут в день.
-          </p>
+          <span className="text-3xl">🎯</span>
+          <div>
+            <p className="text-sm font-bold" style={{ color: "#065f46" }}>
+              Попробуй флэш-карточки
+            </p>
+            <p className="text-xs mt-0.5" style={{ color: "#059669" }}>
+              6 наборов · местоимения, числа, глаголы
+            </p>
+          </div>
+          <Link
+            href="/practice"
+            className="ml-auto text-xs font-bold px-3 py-1.5 rounded-full transition active:scale-95"
+            style={{ background: "#10b981", color: "white" }}
+          >
+            Начать
+          </Link>
         </div>
       </div>
     </div>
