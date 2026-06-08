@@ -1,39 +1,95 @@
 "use client";
 
 import { useState } from "react";
-import NumberCard from "@/components/NumberCard";
 import numbersData from "@/content/numbers.json";
 
 type Tab = "units" | "tens" | "large";
 
-const tabs: { id: Tab; label: string; emoji: string }[] = [
-  { id: "units", label: "1 – 10", emoji: "🔢" },
-  { id: "tens", label: "Десятки", emoji: "💯" },
-  { id: "large", label: "Крупные", emoji: "🌌" },
+const tabs: { id: Tab; label: string }[] = [
+  { id: "units", label: "1 – 10" },
+  { id: "tens", label: "Десятки" },
+  { id: "large", label: "Крупные" },
 ];
+
+interface NumberRow {
+  number: number;
+  buryat: string;
+  variants?: string[];
+}
+
+function NumberList({ items }: { items: NumberRow[] }) {
+  return (
+    <div
+      className="rounded-2xl overflow-hidden"
+      style={{ border: "2px solid #e2e8f0", background: "white" }}
+    >
+      {items.map((n, i) => (
+        <div
+          key={n.number}
+          className="flex items-center gap-4 px-4 py-4"
+          style={{
+            borderTop: i === 0 ? "none" : "1px solid #f1f5f9",
+            background: i % 2 === 0 ? "white" : "#f8faff",
+          }}
+        >
+          {/* Number badge */}
+          <div
+            className="w-14 h-14 rounded-2xl flex items-center justify-center flex-shrink-0"
+            style={{
+              background: "#eff6ff",
+              border: "2px solid #dbeafe",
+            }}
+          >
+            <span
+              className="font-bold"
+              style={{
+                fontSize: n.number >= 100 ? "1rem" : n.number >= 10 ? "1.5rem" : "2rem",
+                color: "#1d4ed8",
+                fontFamily: '"Playfair Display", Georgia, serif',
+                lineHeight: 1,
+              }}
+            >
+              {n.number}
+            </span>
+          </div>
+
+          {/* Text */}
+          <div className="flex-1 min-w-0">
+            <p
+              className="font-bold leading-tight"
+              style={{ fontSize: "1.2rem", color: "#0f172a" }}
+            >
+              {n.buryat}
+            </p>
+            {n.variants && n.variants.length > 0 && (
+              <p className="text-sm mt-0.5" style={{ color: "#94a3b8" }}>
+                также: {n.variants.join(", ")}
+              </p>
+            )}
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
 
 export default function NumbersPage() {
   const [activeTab, setActiveTab] = useState<Tab>("units");
 
   return (
-    <div className="page-enter" style={{ background: "#f8faff", minHeight: "100dvh" }}>
+    <div style={{ background: "#f8faff", minHeight: "100dvh" }}>
       {/* Header */}
       <div
-        className="px-5 pb-6 relative overflow-hidden"
+        className="px-5 pb-5"
         style={{
-          background: "linear-gradient(140deg, #f97316 0%, #dc2626 100%)",
+          background: "linear-gradient(140deg, #1e3a5f 0%, #1d4ed8 100%)",
           paddingTop: "calc(env(safe-area-inset-top) + 24px)",
         }}
       >
-        <div
-          className="absolute"
-          style={{
-            top: -40, right: -40, width: 160, height: 160,
-            borderRadius: "50%",
-            background: "radial-gradient(circle, rgba(255,255,255,0.15), transparent 70%)",
-          }}
-        />
-        <p className="text-xs font-bold uppercase tracking-widest mb-1" style={{ color: "rgba(255,255,255,0.7)" }}>
+        <p
+          className="text-xs font-bold uppercase tracking-widest mb-1"
+          style={{ color: "rgba(255,255,255,0.5)" }}
+        >
           Тоонууд
         </p>
         <h1
@@ -42,129 +98,112 @@ export default function NumbersPage() {
         >
           Числа
         </h1>
-        <p className="text-sm mt-1" style={{ color: "rgba(255,255,255,0.75)" }}>
-          Нажми на карточку — узнаешь слово
-        </p>
       </div>
 
       {/* Tabs */}
       <div
-        className="sticky top-0 z-10 px-4 pt-3 pb-2 flex gap-2"
-        style={{ background: "rgba(248,250,255,0.95)", backdropFilter: "blur(10px)", borderBottom: "1px solid #e2e8f0" }}
+        className="sticky top-0 z-10 px-4 py-3 flex gap-2"
+        style={{
+          background: "rgba(248,250,255,0.97)",
+          backdropFilter: "blur(10px)",
+          borderBottom: "1px solid #e2e8f0",
+        }}
       >
         {tabs.map((tab) => (
           <button
             key={tab.id}
             onClick={() => setActiveTab(tab.id)}
-            className="flex-1 py-2 rounded-full text-sm font-bold transition-all duration-200 active:scale-95 flex items-center justify-center gap-1.5"
+            className="flex-1 py-2.5 rounded-full text-sm font-bold transition-all duration-200 active:scale-95"
             style={{
-              background: activeTab === tab.id
-                ? "linear-gradient(135deg, #f97316, #dc2626)"
-                : "#f1f5f9",
+              background: activeTab === tab.id ? "#1d4ed8" : "#f1f5f9",
               color: activeTab === tab.id ? "white" : "#64748b",
-              boxShadow: activeTab === tab.id ? "0 2px 12px -2px #f9731655" : "none",
             }}
           >
-            <span>{tab.emoji}</span>
-            <span>{tab.label}</span>
+            {tab.label}
           </button>
         ))}
       </div>
 
-      <div className="px-4 pt-4 pb-6">
+      <div className="px-4 pt-4 pb-8">
+
         {/* UNITS */}
         {activeTab === "units" && (
-          <div>
-            <div className="flex items-center gap-2 mb-4">
-              <div className="h-px flex-1" style={{ background: "#e2e8f0" }} />
-              <span className="text-xs font-bold uppercase tracking-widest" style={{ color: "#94a3b8" }}>
-                Переверни карточку
-              </span>
-              <div className="h-px flex-1" style={{ background: "#e2e8f0" }} />
-            </div>
-            <div className="grid grid-cols-2 gap-3">
-              {numbersData.units.map((n, i) => (
-                <NumberCard
-                  key={n.number}
-                  number={n.number}
-                  buryat={n.buryat}
-                  variants={(n as { variants?: string[] }).variants}
-                  colorIndex={i}
-                />
-              ))}
-            </div>
-          </div>
+          <NumberList
+            items={numbersData.units.map((n) => ({
+              number: n.number,
+              buryat: n.buryat,
+              variants: (n as { variants?: string[] }).variants,
+            }))}
+          />
         )}
 
         {/* TENS */}
         {activeTab === "tens" && (
-          <div>
-            <div className="flex items-center gap-2 mb-4">
-              <div className="h-px flex-1" style={{ background: "#e2e8f0" }} />
-              <span className="text-xs font-bold uppercase tracking-widest" style={{ color: "#94a3b8" }}>
-                Переверни карточку
-              </span>
-              <div className="h-px flex-1" style={{ background: "#e2e8f0" }} />
-            </div>
-            <div className="grid grid-cols-2 gap-3">
-              {numbersData.tens.map((n, i) => (
-                <NumberCard
-                  key={n.number}
-                  number={n.number}
-                  buryat={n.buryat}
-                  variants={(n as { variants?: string[] }).variants}
-                  colorIndex={i + 1}
-                />
-              ))}
-            </div>
-          </div>
+          <NumberList
+            items={numbersData.tens.map((n) => ({
+              number: n.number,
+              buryat: n.buryat,
+              variants: (n as { variants?: string[] }).variants,
+            }))}
+          />
         )}
 
         {/* LARGE */}
         {activeTab === "large" && (
           <div>
-            <div className="grid grid-cols-3 gap-3 mb-5">
-              {numbersData.large.map((n, i) => (
-                <NumberCard key={n.number} number={n.number} buryat={n.buryat} colorIndex={i * 3 + 2} />
-              ))}
-            </div>
+            <NumberList
+              items={numbersData.large.map((n) => ({
+                number: n.number,
+                buryat: n.buryat,
+              }))}
+            />
 
-            {/* Compound rule */}
+            {/* Rule */}
             <div
-              className="rounded-2xl p-4 mb-4"
-              style={{ background: "linear-gradient(135deg, #1e3a5f, #1d4ed8)" }}
+              className="mt-4 rounded-2xl p-4"
+              style={{ background: "#1e3a5f" }}
             >
-              <p className="text-xs font-bold uppercase tracking-wide mb-1.5" style={{ color: "#fbbf24" }}>
-                ✦ Составные числа
+              <p
+                className="text-xs font-bold uppercase tracking-wide mb-1.5"
+                style={{ color: "#fbbf24" }}
+              >
+                Составные числа
               </p>
-              <p className="text-sm text-white leading-relaxed">{numbersData.compound_rule}</p>
+              <p className="text-sm text-white leading-relaxed">
+                {numbersData.compound_rule}
+              </p>
             </div>
 
             {/* Examples */}
-            <p className="text-xs font-bold uppercase tracking-widest mb-3" style={{ color: "#94a3b8" }}>
+            <p
+              className="text-xs font-bold uppercase tracking-widest mt-5 mb-3"
+              style={{ color: "#94a3b8" }}
+            >
               Примеры
             </p>
-            <div className="space-y-2">
+            <div
+              className="rounded-2xl overflow-hidden"
+              style={{ border: "2px solid #e2e8f0", background: "white" }}
+            >
               {numbersData.examples.map((ex, i) => (
                 <div
                   key={ex.number}
-                  className="flex items-center justify-between rounded-xl px-4 py-3"
+                  className="flex items-center justify-between px-5 py-3"
                   style={{
-                    background: "white",
-                    border: "2px solid #e2e8f0",
-                    boxShadow: "0 2px 8px rgba(0,0,0,0.04)",
+                    borderTop: i === 0 ? "none" : "1px solid #f1f5f9",
+                    background: i % 2 === 0 ? "white" : "#f8faff",
                   }}
                 >
                   <span
-                    className="text-2xl font-bold"
+                    className="text-xl font-bold"
                     style={{
-                      color: ["#ef4444","#f97316","#6366f1","#14b8a6"][i % 4],
+                      color: "#1d4ed8",
                       fontFamily: '"Playfair Display", Georgia, serif',
                     }}
                   >
                     {ex.number}
                   </span>
-                  <span className="text-base font-bold" style={{ color: "#1e3a5f" }}>
+                  <span className="text-base font-bold" style={{ color: "#0f172a" }}>
                     {ex.buryat}
                   </span>
                 </div>
@@ -173,33 +212,34 @@ export default function NumbersPage() {
           </div>
         )}
 
-        {/* AGE PHRASES */}
+        {/* Age phrases — always visible at bottom */}
         <div
           className="mt-5 rounded-2xl overflow-hidden"
-          style={{ boxShadow: "0 4px 20px rgba(0,0,0,0.07)" }}
+          style={{ border: "2px solid #e2e8f0" }}
         >
           <div
-            className="px-4 py-3 flex items-center gap-2"
-            style={{ background: "linear-gradient(135deg, #f59e0b, #d97706)" }}
+            className="px-4 py-3"
+            style={{ background: "#1d4ed8" }}
           >
-            <span className="text-lg">🎂</span>
-            <p className="text-sm font-bold text-white">Как спросить возраст?</p>
+            <p className="text-sm font-bold text-white">
+              🎂 Как спросить возраст?
+            </p>
           </div>
           {numbersData.age_phrases.map((phrase, i) => (
             <div
               key={i}
-              className="px-4 py-3 border-t"
+              className="px-4 py-3"
               style={{
-                borderColor: "#f1f5f9",
+                borderTop: "1px solid #f1f5f9",
                 background: i % 2 === 0 ? "white" : "#f8faff",
               }}
             >
-              <div className="text-base font-bold" style={{ color: "#1e3a5f" }}>
+              <p className="font-bold" style={{ color: "#1e3a5f" }}>
                 {phrase.buryat}
-              </div>
-              <div className="text-sm mt-0.5" style={{ color: "#64748b" }}>
+              </p>
+              <p className="text-sm mt-0.5" style={{ color: "#64748b" }}>
                 {phrase.russian}
-              </div>
+              </p>
             </div>
           ))}
         </div>

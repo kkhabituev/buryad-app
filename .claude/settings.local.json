@@ -15,7 +15,8 @@
       "PowerShell(Copy-Item \"C:\\\\Users\\\\ROG\\\\Documents\\\\!projects\\\\05_assorted\\\\BuryadHelenApp\\\\tsconfig.json\" -Destination \"C:\\\\Users\\\\ROG\\\\buryad-build\\\\tsconfig.json\" -Force)",
       "PowerShell(\"Copied\")",
       "Bash(gh repo *)",
-      "Bash(npx vercel *)"
+      "Bash(npx vercel *)",
+      "Bash(git push *)"
     ]
   }
 }

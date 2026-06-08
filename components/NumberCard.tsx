@@ -28,12 +28,12 @@ export default function NumberCard({ number, buryat, variants, colorIndex = 0 }:
 
   return (
     <div
-      className={`flip-card cursor-pointer select-none btn-tap`}
+      className={`flip-card cursor-pointer select-none btn-tap${flipped ? " flipped" : ""}`}
       style={{ height: 130, minHeight: 130 }}
       onClick={() => setFlipped(!flipped)}
     >
       <div
-        className={`flip-card-inner${flipped ? " flipped" : ""}`}
+        className="flip-card-inner"
         style={{ height: "100%" }}
       >
         {/* FRONT */}
