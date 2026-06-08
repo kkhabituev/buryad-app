@@ -26,7 +26,7 @@ function NumberList({ items }: { items: NumberRow[] }) {
       {items.map((n, i) => (
         <div
           key={n.number}
-          className="flex items-center gap-4 px-4 py-4"
+          className="flex items-center gap-3 px-4 py-2.5"
           style={{
             borderTop: i === 0 ? "none" : "1px solid #f1f5f9",
             background: i % 2 === 0 ? "white" : "#f8faff",
@@ -34,16 +34,16 @@ function NumberList({ items }: { items: NumberRow[] }) {
         >
           {/* Number badge */}
           <div
-            className="w-14 h-14 rounded-2xl flex items-center justify-center flex-shrink-0"
+            className="w-11 h-11 rounded-xl flex items-center justify-center flex-shrink-0"
             style={{
               background: "#eff6ff",
-              border: "2px solid #dbeafe",
+              border: "1.5px solid #dbeafe",
             }}
           >
             <span
               className="font-bold"
               style={{
-                fontSize: n.number >= 100 ? "1rem" : n.number >= 10 ? "1.5rem" : "2rem",
+                fontSize: n.number >= 100 ? "0.85rem" : n.number >= 10 ? "1.2rem" : "1.6rem",
                 color: "#1d4ed8",
                 fontFamily: '"Playfair Display", Georgia, serif',
                 lineHeight: 1,
@@ -57,7 +57,7 @@ function NumberList({ items }: { items: NumberRow[] }) {
           <div className="flex-1 min-w-0">
             <p
               className="font-bold leading-tight"
-              style={{ fontSize: "1.2rem", color: "#0f172a" }}
+              style={{ fontSize: "1.05rem", color: "#0f172a" }}
             >
               {n.buryat}
             </p>

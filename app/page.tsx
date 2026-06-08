@@ -96,9 +96,6 @@ export default function HomePage() {
           <p className="text-base font-semibold mb-1" style={{ color: "#fbbf24" }}>
             Учим бурятский вместе
           </p>
-          <p className="text-sm" style={{ color: "rgba(255,255,255,0.5)" }}>
-            Интерактивно · С нуля · Бесплатно
-          </p>
 
           {/* Mini stats */}
           <div className="flex gap-3 mt-5">

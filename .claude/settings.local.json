@@ -16,7 +16,8 @@
       "PowerShell(\"Copied\")",
       "Bash(gh repo *)",
       "Bash(npx vercel *)",
-      "Bash(git push *)"
+      "Bash(git push *)",
+      "WebFetch(domain:burlang.ru)"
     ]
   }
 }
