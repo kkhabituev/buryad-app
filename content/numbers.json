@@ -1,0 +1,43 @@
+{
+  "units": [
+    { "number": 1, "buryat": "нэгэ(н)" },
+    { "number": 2, "buryat": "хоёр" },
+    { "number": 3, "buryat": "гурба(н)" },
+    { "number": 4, "buryat": "дурбэ(н)" },
+    { "number": 5, "buryat": "таба(н)" },
+    { "number": 6, "buryat": "зургаа(н)", "variants": ["ергоо(н)", "жоргоо(н)"] },
+    { "number": 7, "buryat": "долоо(н)" },
+    { "number": 8, "buryat": "найма(н)" },
+    { "number": 9, "buryat": "юhэ(н)" },
+    { "number": 10, "buryat": "арба(н)" }
+  ],
+  "tens": [
+    { "number": 10, "buryat": "арба(н)" },
+    { "number": 20, "buryat": "хори(н)" },
+    { "number": 30, "buryat": "гуша(н)" },
+    { "number": 40, "buryat": "душэ(н)" },
+    { "number": 50, "buryat": "таби(н)" },
+    { "number": 60, "buryat": "жаран", "variants": ["жара(н)"] },
+    { "number": 70, "buryat": "дала(н)" },
+    { "number": 80, "buryat": "ная(н)", "variants": ["наин"] },
+    { "number": 90, "buryat": "ерэ(н)" }
+  ],
+  "large": [
+    { "number": 100, "buryat": "зуу(н)" },
+    { "number": 1000, "buryat": "мянга(н)" },
+    { "number": 1000000, "buryat": "сая" }
+  ],
+  "compound_rule": "Десятки + единицы через пробел. Пример: 11 = арбан нэгэн, 23 = хорин гурба, 567 = табан зуун жаран долоон",
+  "examples": [
+    { "number": 11, "buryat": "арбан нэгэн" },
+    { "number": 12, "buryat": "арбан хоёр" },
+    { "number": 23, "buryat": "хорин гурба" },
+    { "number": 567, "buryat": "табан зуун жаран долоон" }
+  ],
+  "age_phrases": [
+    { "buryat": "Та хэдытэйт?", "russian": "Сколько вам лет? (вежл.)" },
+    { "buryat": "Ши хэдытэйш?", "russian": "Сколько тебе лет?" },
+    { "buryat": "Би душэ(н)тэйб", "russian": "Мне 40 лет" },
+    { "buryat": "Би хорин табатайб", "russian": "Мне 25 лет" }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npx create-next-app@latest . --typescript --tailwind --app --no-eslint --no-src-dir --import-alias \"@/*\" --yes)",
+      "Bash(npm init *)",
+      "Bash(npm install *)",
+      "Bash(npm run *)",
+      "Bash(cmd /c \"mklink /J C:\\\\buryad-app \\\\\"C:\\\\Users\\\\ROG\\\\Documents\\\\!projects\\\\05_assorted\\\\BuryadHelenApp\\\\\"\")",
+      "Bash(ls \"C:\\\\buryad-app\" | head -10)",
+      "Bash(cmd /c \"dir C:\\\\buryad-app\")",
+      "Bash(rm -rf \"C:\\\\buryad-app\")",
+      "Bash(cp -r \"C:\\\\Users\\\\ROG\\\\Documents\\\\!projects\\\\05_assorted\\\\BuryadHelenApp\" \"C:\\\\Users\\\\ROG\\\\buryad-build\" --exclude=\"node_modules\" --exclude=\".next\")",
+      "PowerShell(New-Item -ItemType Directory -Path \"C:\\\\Users\\\\ROG\\\\buryad-build\\\\types\" -Force)",
+      "PowerShell(Copy-Item \"C:\\\\Users\\\\ROG\\\\Documents\\\\!projects\\\\05_assorted\\\\BuryadHelenApp\\\\types\\\\css.d.ts\" -Destination \"C:\\\\Users\\\\ROG\\\\buryad-build\\\\types\\\\css.d.ts\" -Force)",
+      "PowerShell(Copy-Item \"C:\\\\Users\\\\ROG\\\\Documents\\\\!projects\\\\05_assorted\\\\BuryadHelenApp\\\\tsconfig.json\" -Destination \"C:\\\\Users\\\\ROG\\\\buryad-build\\\\tsconfig.json\" -Force)",
+      "PowerShell(\"Copied\")"
+    ]
+  }
+}

@@ -1,0 +1,32 @@
+{
+  "tense": "Настоящее простое время",
+  "rule": "Убираем окончание -ха / -хэ и добавляем -на / -но / -нэ",
+  "verbs": [
+    {
+      "infinitive": "Байха",
+      "meaning": "быть, есть",
+      "stem": "Байна",
+      "forms": [
+        { "pronoun": "Би", "pronoun_ru": "я", "form": "БайнаБ", "note": "(м) — разговорный вариант" },
+        { "pronoun": "Ши", "pronoun_ru": "ты", "form": "БайнаШ", "note": "" },
+        { "pronoun": "Тэрэ / Өөhэн", "pronoun_ru": "он / она / оно", "form": "БайНА", "note": "базовая форма" },
+        { "pronoun": "Бидэ(н)", "pronoun_ru": "мы", "form": "БайнаБДИ", "note": "или Мди" },
+        { "pronoun": "Тэдэ / Эдэ", "pronoun_ru": "они", "form": "Байна", "note": "" },
+        { "pronoun": "Та / Таанар", "pronoun_ru": "вы", "form": "БайнаТ", "note": "" }
+      ]
+    },
+    {
+      "infinitive": "Эдихэ",
+      "meaning": "кушать",
+      "stem": "Эдинэ",
+      "forms": [
+        { "pronoun": "Би", "pronoun_ru": "я", "form": "ЭдинэБ", "note": "" },
+        { "pronoun": "Ши", "pronoun_ru": "ты", "form": "ЭдинэШ", "note": "" },
+        { "pronoun": "Тэрэ", "pronoun_ru": "он / она", "form": "ЭдиНЭ", "note": "" },
+        { "pronoun": "Бидэ(н)", "pronoun_ru": "мы", "form": "ЭдинэБДИ", "note": "" },
+        { "pronoun": "Тэдэ / Эдэ", "pronoun_ru": "они", "form": "Эдинэ", "note": "" },
+        { "pronoun": "Та / Таанар", "pronoun_ru": "вы", "form": "ЭдинэТ", "note": "" }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,27 @@
+{
+  "personal": [
+    { "buryat": "Би", "russian": "я", "pronunciation": "bi" },
+    { "buryat": "Ши", "russian": "ты", "pronunciation": "shi" },
+    { "buryat": "Тэрэ / Өөhэн", "russian": "он, она, оно, тот", "pronunciation": "tere / öhön" },
+    { "buryat": "Бидэ(н)", "russian": "мы", "pronunciation": "bide(n)" },
+    { "buryat": "Тэдэ / Эдэ", "russian": "они, эти", "pronunciation": "tede / ede" },
+    { "buryat": "Та / Таанар", "russian": "вы", "pronunciation": "ta / taanar" }
+  ],
+  "possessive": [
+    { "pronoun": "Би", "possessive": "Минии", "russian": "мой, моя, моё, мои" },
+    { "pronoun": "Ши", "possessive": "Шинии", "russian": "твой, твоя, твоё, твои" },
+    { "pronoun": "Та / Таанар", "possessive": "Танай / Таанарай", "russian": "ваш, ваша, ваше, ваши", "note": "Таанарай — редко" },
+    { "pronoun": "Бидэ(н)", "possessive": "Бидэнэй / Манай", "russian": "наш, наша, наше, наши" },
+    { "pronoun": "Тэдэ / Эдэ", "possessive": "Тэдээнэй / Эдээнэй", "russian": "их, этих" },
+    { "pronoun": "Өөhэд", "possessive": "Өөhэдэй", "russian": "их" },
+    { "pronoun": "Тэрэ / Өөhэн", "possessive": "Тэрээнэй / Өөhэнэй", "russian": "его, её" }
+  ],
+  "demonstrative": [
+    { "buryat": "Энэ", "russian": "это", "note": "ближе к говорящему" },
+    { "buryat": "Тэрэ", "russian": "то", "note": "дальше от говорящего" }
+  ],
+  "questions": [
+    { "buryat": "Хэнэй?", "russian": "кого?" },
+    { "buryat": "Юунэй?", "russian": "чего?" }
+  ]
+}

@@ -1,0 +1,16 @@
+{
+  "situations": [
+    {
+      "id": "greetings",
+      "name": "Мэндэшэлгэ (Приветствия)",
+      "emoji": "👋",
+      "phrases": []
+    },
+    {
+      "id": "food",
+      "name": "Эдеэ хоол (За едой)",
+      "emoji": "🍽️",
+      "phrases": []
+    }
+  ]
+}

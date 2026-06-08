@@ -1,0 +1,22 @@
+{
+  "categories": [
+    {
+      "id": "animals",
+      "name": "Амитад (Животные)",
+      "emoji": "🐻",
+      "words": []
+    },
+    {
+      "id": "colors",
+      "name": "Үнгэнүүд (Цвета)",
+      "emoji": "🎨",
+      "words": []
+    },
+    {
+      "id": "food",
+      "name": "Эдеэн (Еда)",
+      "emoji": "🥘",
+      "words": []
+    }
+  ]
+}
