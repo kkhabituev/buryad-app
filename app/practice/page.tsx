@@ -84,7 +84,6 @@ export default function PracticePage() {
   const [cardIndex, setCardIndex] = useState(0);
 
   // Learn mode state
-  const [revealed, setRevealed] = useState(false);
   const [knownIds, setKnownIds] = useState<Set<string>>(new Set());
   const [wrongIds, setWrongIds] = useState<Set<string>>(new Set());
   const [flashClass, setFlashClass] = useState("");
@@ -113,7 +112,6 @@ export default function PracticePage() {
     if (!activeSet) return;
     setPracticeMode(mode);
     setCardIndex(0);
-    setRevealed(false);
     setKnownIds(new Set());
     setWrongIds(new Set());
     setQuizSelected(null);
@@ -134,7 +132,7 @@ export default function PracticePage() {
     setTimeout(() => setFlashClass(""), 500);
     const next = cardIndex + 1;
     if (next >= activeSet.cards.length) { setPhase("done"); }
-    else { setCardIndex(next); setRevealed(false); }
+    else { setCardIndex(next); }
   };
 
   // ── Quiz mode handlers ──────────────────────────────────────
@@ -206,7 +204,7 @@ export default function PracticePage() {
                 <span className="text-base">📖</span>
                 <div>
                   <p className="text-xs font-bold" style={{ color: "#1e3a5f" }}>Обучение</p>
-                  <p className="text-xs" style={{ color: "#3b82f6" }}>Листаешь и запоминаешь</p>
+                  <p className="text-xs" style={{ color: "#3b82f6" }}>Оба языка сразу на карточке</p>
                 </div>
               </div>
               <div className="flex items-start gap-2 ml-4">
@@ -262,8 +260,8 @@ export default function PracticePage() {
               </div>
               <div>
                 <p className="text-lg font-bold" style={{ color: "#1e3a5f" }}>Обучение</p>
-                <p className="text-sm mt-0.5" style={{ color: "#3b82f6" }}>Листаешь карточки, запоминаешь слова</p>
-                <p className="text-xs mt-1" style={{ color: "#93c5fd" }}>Нет верных / неверных — только память</p>
+                <p className="text-sm mt-0.5" style={{ color: "#3b82f6" }}>Бурятский и перевод сразу на одной карточке</p>
+                <p className="text-xs mt-1" style={{ color: "#93c5fd" }}>Пролистываешь и отмечаешь что знаешь</p>
               </div>
             </div>
           </button>
@@ -384,22 +382,37 @@ export default function PracticePage() {
           </span>
         </div>
 
+        {/* Dual-language card — both shown at once */}
         <div className="flex-1 flex flex-col items-center justify-center px-5 py-4">
-          <div className={`w-full rounded-3xl p-6 flex flex-col items-center justify-center transition-all duration-200 ${flashClass}`}
-            style={{ background: "white", border: "2px solid #e2e8f0", boxShadow: "0 8px 32px rgba(0,0,0,0.06)", minHeight: 220 }}>
-            <p className="text-xs font-bold uppercase tracking-widest mb-4" style={{ color: "#94a3b8" }}>
-              {revealed ? "Перевод" : "Бурятский"}
-            </p>
-            {!revealed ? (
-              <span className="text-4xl font-bold text-center leading-tight" style={{ color: "#0f172a" }}>{card.front}</span>
-            ) : (
-              <div className="card-reveal text-center">
-                <span className="text-3xl font-bold block" style={{ color: "#1d4ed8" }}>{card.back}</span>
-                {card.hint && <span className="block text-sm mt-2 font-medium italic" style={{ color: "#64748b" }}>{card.hint}</span>}
-              </div>
-            )}
+          <div className={`w-full rounded-3xl overflow-hidden transition-all duration-200 ${flashClass}`}
+            style={{ boxShadow: "0 8px 32px rgba(0,0,0,0.08)", border: "2px solid #e2e8f0" }}>
+            {/* Buryat — top half */}
+            <div className="px-6 pt-6 pb-5 flex flex-col items-center"
+              style={{ background: activeSet.gradient, borderBottom: "2px solid rgba(255,255,255,0.15)" }}>
+              <p className="text-xs font-bold uppercase tracking-widest mb-3" style={{ color: "rgba(255,255,255,0.6)" }}>
+                Бурятский
+              </p>
+              <span className="text-4xl font-bold text-center leading-tight text-white">
+                {card.front}
+              </span>
+            </div>
+            {/* Russian — bottom half */}
+            <div className="px-6 pt-5 pb-6 flex flex-col items-center" style={{ background: "white" }}>
+              <p className="text-xs font-bold uppercase tracking-widest mb-3" style={{ color: "#94a3b8" }}>
+                Перевод
+              </p>
+              <span className="text-2xl font-bold text-center leading-snug" style={{ color: "#1e3a5f" }}>
+                {card.back}
+              </span>
+              {card.hint && (
+                <span className="block text-sm mt-2 font-medium italic text-center" style={{ color: "#94a3b8" }}>
+                  {card.hint}
+                </span>
+              )}
+            </div>
           </div>
 
+          {/* Progress dots */}
           <div className="flex gap-1.5 mt-4">
             {activeSet.cards.map((c, i) => (
               <div key={c.id} className="rounded-full transition-all duration-300"
@@ -408,29 +421,22 @@ export default function PracticePage() {
           </div>
         </div>
 
+        {/* Always-visible answer buttons */}
         <div className="px-4 pb-24 pt-2">
-          {!revealed ? (
-            <button onClick={() => setRevealed(true)}
-              className="w-full py-4 rounded-2xl font-bold text-white text-base transition active:scale-95 btn-tap"
-              style={{ background: activeSet.gradient, boxShadow: `0 4px 16px -4px ${activeSet.glow}66` }}>
-              Показать ответ
+          <div className="flex gap-3">
+            <button onClick={() => handleAnswer(false)}
+              className="flex-1 py-4 rounded-2xl font-bold text-base transition active:scale-95 flex flex-col items-center gap-0.5 btn-tap"
+              style={{ background: "#fef2f2", color: "#dc2626", border: "2px solid #fecaca" }}>
+              <span className="text-xl">✗</span>
+              <span className="text-sm">Ещё раз</span>
             </button>
-          ) : (
-            <div className="flex gap-3">
-              <button onClick={() => handleAnswer(false)}
-                className="flex-1 py-4 rounded-2xl font-bold text-base transition active:scale-95 flex flex-col items-center gap-0.5 btn-tap"
-                style={{ background: "#fef2f2", color: "#dc2626", border: "2px solid #fecaca" }}>
-                <span className="text-xl">✗</span>
-                <span className="text-sm">Ещё раз</span>
-              </button>
-              <button onClick={() => handleAnswer(true)}
-                className="flex-1 py-4 rounded-2xl font-bold text-base transition active:scale-95 flex flex-col items-center gap-0.5 btn-tap"
-                style={{ background: "#ecfdf5", color: "#16a34a", border: "2px solid #bbf7d0" }}>
-                <span className="text-xl">✓</span>
-                <span className="text-sm">Знаю!</span>
-              </button>
-            </div>
-          )}
+            <button onClick={() => handleAnswer(true)}
+              className="flex-1 py-4 rounded-2xl font-bold text-base transition active:scale-95 flex flex-col items-center gap-0.5 btn-tap"
+              style={{ background: "#ecfdf5", color: "#16a34a", border: "2px solid #bbf7d0" }}>
+              <span className="text-xl">✓</span>
+              <span className="text-sm">Знаю!</span>
+            </button>
+          </div>
         </div>
       </div>
     );

@@ -81,12 +81,16 @@ export default function VocabularyPage() {
         const res = await fetch(`${API}/${endpoint}/search?q=${encodeURIComponent(query)}`);
         if (res.ok) {
           const data: SearchSuggestion[] = await res.json();
-          setSuggestions(data.map((d) => d.value).slice(0, 6));
+          const results = data.map((d) => d.value).slice(0, 6);
+          setSuggestions(results);
+          // Translate the best match (first suggestion), not the raw partial query
+          translate(results.length > 0 ? results[0] : query, false);
+        } else {
+          translate(query, false);
         }
       } finally {
         setLoadingSuggest(false);
       }
-      translate(query, false);
     }, 350);
   }, [query, dir, translate]);
 
