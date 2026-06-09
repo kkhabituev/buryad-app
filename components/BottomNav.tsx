@@ -27,12 +27,15 @@ const navItems = [
     ),
   },
   {
-    href: "/numbers",
-    label: "Числа",
+    href: "/topics",
+    label: "Темы",
     exact: false,
     icon: (active: boolean) => (
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
-        <text x="3" y="17" fontSize="15" fontWeight="800" fill={active ? "#1d4ed8" : "#94a3b8"}>123</text>
+        <rect x="3" y="3" width="7" height="7" rx="1.5" stroke={active ? "#1d4ed8" : "#94a3b8"} strokeWidth="2" fill={active ? "rgba(29,78,216,0.12)" : "none"} />
+        <rect x="14" y="3" width="7" height="7" rx="1.5" stroke={active ? "#1d4ed8" : "#94a3b8"} strokeWidth="2" fill={active ? "rgba(29,78,216,0.12)" : "none"} />
+        <rect x="3" y="14" width="7" height="7" rx="1.5" stroke={active ? "#1d4ed8" : "#94a3b8"} strokeWidth="2" fill={active ? "rgba(29,78,216,0.12)" : "none"} />
+        <rect x="14" y="14" width="7" height="7" rx="1.5" stroke={active ? "#1d4ed8" : "#94a3b8"} strokeWidth="2" fill={active ? "rgba(29,78,216,0.12)" : "none"} />
       </svg>
     ),
   },
