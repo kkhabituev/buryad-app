@@ -7,25 +7,51 @@
       "meaning": "быть, есть",
       "stem": "Байна",
       "forms": [
-        { "pronoun": "Би", "pronoun_ru": "я", "form": "БайнаБ", "note": "(м) — разговорный вариант" },
-        { "pronoun": "Ши", "pronoun_ru": "ты", "form": "БайнаШ", "note": "" },
-        { "pronoun": "Тэрэ / Өөhэн", "pronoun_ru": "он / она / оно", "form": "БайНА", "note": "базовая форма" },
-        { "pronoun": "Бидэ(н)", "pronoun_ru": "мы", "form": "БайнаБДИ", "note": "или Мди" },
-        { "pronoun": "Тэдэ / Эдэ", "pronoun_ru": "они", "form": "Байна", "note": "" },
-        { "pronoun": "Та / Таанар", "pronoun_ru": "вы", "form": "БайнаТ", "note": "" }
+        { "pronoun": "Би",            "pronoun_ru": "я",           "form": "БайНАБ",    "translation": "я есть / нахожусь",   "note": "разговорный вариант" },
+        { "pronoun": "Ши",            "pronoun_ru": "ты",          "form": "БайНАШ",    "translation": "ты есть / находишься", "note": "" },
+        { "pronoun": "Тэрэ / Өөhэн", "pronoun_ru": "он / она",    "form": "БайНА",     "translation": "он / она есть",       "note": "базовая форма" },
+        { "pronoun": "Бидэ(н)",       "pronoun_ru": "мы",          "form": "БайНАБДИ",  "translation": "мы есть / находимся", "note": "или Мди" },
+        { "pronoun": "Тэдэ / Эдэ",   "pronoun_ru": "они",         "form": "БайНА",     "translation": "они есть",            "note": "форма та же, что и 3-е ед.ч." },
+        { "pronoun": "Та / Таанар",   "pronoun_ru": "вы",          "form": "БайНАТ",    "translation": "вы есть / находитесь", "note": "" }
       ]
     },
     {
       "infinitive": "Эдихэ",
-      "meaning": "кушать",
+      "meaning": "кушать, есть",
       "stem": "Эдинэ",
       "forms": [
-        { "pronoun": "Би", "pronoun_ru": "я", "form": "ЭдинэБ", "note": "" },
-        { "pronoun": "Ши", "pronoun_ru": "ты", "form": "ЭдинэШ", "note": "" },
-        { "pronoun": "Тэрэ", "pronoun_ru": "он / она", "form": "ЭдиНЭ", "note": "" },
-        { "pronoun": "Бидэ(н)", "pronoun_ru": "мы", "form": "ЭдинэБДИ", "note": "" },
-        { "pronoun": "Тэдэ / Эдэ", "pronoun_ru": "они", "form": "Эдинэ", "note": "" },
-        { "pronoun": "Та / Таанар", "pronoun_ru": "вы", "form": "ЭдинэТ", "note": "" }
+        { "pronoun": "Би",            "pronoun_ru": "я",        "form": "ЭдиНЭБ",   "translation": "я ем",       "note": "" },
+        { "pronoun": "Ши",            "pronoun_ru": "ты",       "form": "ЭдиНЭШ",   "translation": "ты ешь",     "note": "" },
+        { "pronoun": "Тэрэ",          "pronoun_ru": "он / она", "form": "ЭдиНЭ",    "translation": "он/она ест", "note": "" },
+        { "pronoun": "Бидэ(н)",       "pronoun_ru": "мы",       "form": "ЭдиНЭБДИ", "translation": "мы едим",    "note": "" },
+        { "pronoun": "Тэдэ / Эдэ",   "pronoun_ru": "они",      "form": "ЭдиНЭ",    "translation": "они едят",   "note": "" },
+        { "pronoun": "Та / Таанар",   "pronoun_ru": "вы",       "form": "ЭдиНЭТ",   "translation": "вы едите",   "note": "" }
+      ]
+    },
+    {
+      "infinitive": "Ябаха",
+      "meaning": "идти, ходить",
+      "stem": "Ябана",
+      "forms": [
+        { "pronoun": "Би",            "pronoun_ru": "я",        "form": "ЯбаНАБ",   "translation": "я иду",      "note": "" },
+        { "pronoun": "Ши",            "pronoun_ru": "ты",       "form": "ЯбаНАШ",   "translation": "ты идёшь",   "note": "" },
+        { "pronoun": "Тэрэ",          "pronoun_ru": "он / она", "form": "ЯбаНА",    "translation": "он/она идёт","note": "" },
+        { "pronoun": "Бидэ(н)",       "pronoun_ru": "мы",       "form": "ЯбаНАБДИ", "translation": "мы идём",    "note": "" },
+        { "pronoun": "Тэдэ / Эдэ",   "pronoun_ru": "они",      "form": "ЯбаНА",    "translation": "они идут",   "note": "" },
+        { "pronoun": "Та / Таанар",   "pronoun_ru": "вы",       "form": "ЯбаНАТ",   "translation": "вы идёте",   "note": "" }
+      ]
+    },
+    {
+      "infinitive": "Уншаха",
+      "meaning": "читать",
+      "stem": "Уншана",
+      "forms": [
+        { "pronoun": "Би",            "pronoun_ru": "я",        "form": "УншаНАБ",   "translation": "я читаю",      "note": "" },
+        { "pronoun": "Ши",            "pronoun_ru": "ты",       "form": "УншаНАШ",   "translation": "ты читаешь",   "note": "" },
+        { "pronoun": "Тэрэ",          "pronoun_ru": "он / она", "form": "УншаНА",    "translation": "он/она читает","note": "" },
+        { "pronoun": "Бидэ(н)",       "pronoun_ru": "мы",       "form": "УншаНАБДИ", "translation": "мы читаем",    "note": "" },
+        { "pronoun": "Тэдэ / Эдэ",   "pronoun_ru": "они",      "form": "УншаНА",    "translation": "они читают",   "note": "" },
+        { "pronoun": "Та / Таанар",   "pronoun_ru": "вы",       "form": "УншаНАТ",   "translation": "вы читаете",   "note": "" }
       ]
     }
   ]
