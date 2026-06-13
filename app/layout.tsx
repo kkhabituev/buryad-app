@@ -20,12 +20,20 @@ const playfair = Playfair_Display({
 export const metadata: Metadata = {
   title: "Буряад хэлэн",
   description: "Учим бурятский вместе",
+  manifest: "/manifest.json",
+  appleWebApp: {
+    capable: true,
+    title: "Буряад хэлэн",
+    statusBarStyle: "black-translucent",
+  },
+  formatDetection: { telephone: false },
 };
 
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
   viewportFit: "cover",
+  themeColor: "#1e3a5f",
 };
 
 export default function RootLayout({
@@ -35,11 +43,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="ru" className={`${nunito.variable} ${playfair.variable}`}>
-      <head>
-        <meta name="theme-color" content="#1e3a5f" />
-        <meta name="apple-mobile-web-app-capable" content="yes" />
-        <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-      </head>
+      <head />
       <body style={{ fontFamily: "var(--font-nunito), Nunito, sans-serif" }}>
         <main className="pb-20 min-h-screen" style={{ background: "#faf8f4" }}>
           {children}

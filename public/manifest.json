@@ -1,0 +1,12 @@
+{
+  "name": "Буряад хэлэн",
+  "short_name": "Буряад",
+  "description": "Учим бурятский вместе",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#0f172a",
+  "theme_color": "#1e3a5f",
+  "lang": "ru"
+}
