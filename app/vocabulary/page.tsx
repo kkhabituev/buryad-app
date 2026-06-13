@@ -4,12 +4,14 @@ import { useState, useRef, useEffect, useCallback } from "react";
 
 const API = "https://burlang.ru/api/v1";
 const HISTORY_KEY = "buryad_search_history";
+const FAVS_KEY    = "buryad_favs";
 const MAX_HISTORY = 8;
 
 type Direction = "ru→bur" | "bur→ru";
 
 interface SearchSuggestion { value: string }
 interface Translation { value: string }
+interface Favorite { word: string; translation: string; dir: Direction }
 
 // ── LocalStorage helpers ────────────────────────────────────────
 function getHistory(): string[] {
@@ -21,25 +23,76 @@ function saveToHistory(word: string) {
   h.unshift(word);
   localStorage.setItem(HISTORY_KEY, JSON.stringify(h.slice(0, MAX_HISTORY)));
 }
-function clearHistory() {
-  localStorage.removeItem(HISTORY_KEY);
+function clearHistory() { localStorage.removeItem(HISTORY_KEY); }
+
+function getFavs(): Favorite[] {
+  if (typeof window === "undefined") return [];
+  try { return JSON.parse(localStorage.getItem(FAVS_KEY) || "[]"); } catch { return []; }
+}
+function isFavSaved(word: string, dir: Direction) {
+  return getFavs().some((f) => f.word.toLowerCase() === word.toLowerCase() && f.dir === dir);
+}
+function toggleFavSaved(item: Favorite): Favorite[] {
+  const favs = getFavs();
+  const idx = favs.findIndex((f) => f.word.toLowerCase() === item.word.toLowerCase() && f.dir === item.dir);
+  if (idx >= 0) favs.splice(idx, 1);
+  else favs.unshift(item);
+  localStorage.setItem(FAVS_KEY, JSON.stringify(favs.slice(0, 60)));
+  return [...favs];
+}
+
+// ── Buryat flag SVG ─────────────────────────────────────────────
+function BuryatFlag() {
+  return (
+    <svg
+      width="22" height="15" viewBox="0 0 22 15"
+      style={{ display: "inline", verticalAlign: "middle", borderRadius: 2, border: "0.5px solid rgba(0,0,0,0.12)", flexShrink: 0 }}
+    >
+      <rect width="22" height="5"  fill="#003DA5" />
+      <rect y="5"  width="22" height="5"  fill="white" />
+      <rect y="10" width="22" height="5"  fill="#FFD700" />
+      {/* Simplified Soyombo on blue stripe */}
+      <circle cx="5.5" cy="2.5" r="1.3"  fill="#FFD700" />
+      <path d="M3.9 3.8 Q5.5 4.8 7.1 3.8" fill="none" stroke="#FFD700" strokeWidth="0.6" strokeLinecap="round" />
+      <path d="M4.8 1.4 L5.5 0.4 L6.2 1.4" fill="#FFD700" />
+    </svg>
+  );
+}
+
+// ── Star icon ───────────────────────────────────────────────────
+function StarIcon({ filled }: { filled: boolean }) {
+  return (
+    <svg width="17" height="17" viewBox="0 0 24 24" fill={filled ? "#fbbf24" : "none"}>
+      <path
+        d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"
+        stroke={filled ? "#fbbf24" : "rgba(255,255,255,0.7)"}
+        strokeWidth="2"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
 }
 
 // ──────────────────────────────────────────────────────────────────
 export default function VocabularyPage() {
-  const [dir, setDir] = useState<Direction>("ru→bur");
-  const [query, setQuery] = useState("");
-  const [suggestions, setSuggestions] = useState<string[]>([]);
-  const [translation, setTranslation] = useState<string | null>(null);
+  const [dir, setDir]                   = useState<Direction>("ru→bur");
+  const [query, setQuery]               = useState("");
+  const [suggestions, setSuggestions]   = useState<string[]>([]);
+  const [translation, setTranslation]   = useState<string | null>(null);
   const [selectedWord, setSelectedWord] = useState<string | null>(null);
   const [loadingSuggest, setLoadingSuggest] = useState(false);
   const [loadingTranslate, setLoadingTranslate] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [history, setHistory] = useState<string[]>([]);
+  const [error, setError]               = useState<string | null>(null);
+  const [history, setHistory]           = useState<string[]>([]);
+  const [favorites, setFavorites]       = useState<Favorite[]>([]);
+  const [isFav, setIsFav]               = useState(false);
 
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  useEffect(() => { setHistory(getHistory()); }, []);
+  useEffect(() => {
+    setHistory(getHistory());
+    setFavorites(getFavs());
+  }, []);
 
   // ── Translate ────────────────────────────────────────────────
   const translate = useCallback(async (word: string, addHist = true) => {
@@ -57,6 +110,7 @@ export default function VocabularyPage() {
       setTranslation(text || null);
       if (!text) setError("Перевод не найден");
       if (addHist && text) { saveToHistory(word.trim()); setHistory(getHistory()); }
+      setIsFav(isFavSaved(word.trim(), dir));
     } catch {
       setError("Ошибка соединения");
     } finally {
@@ -64,14 +118,12 @@ export default function VocabularyPage() {
     }
   }, [dir]);
 
-  // ── Debounced auto-search + auto-translate ───────────────────
+  // ── Debounced auto-search ────────────────────────────────────
   useEffect(() => {
     if (debounceRef.current) clearTimeout(debounceRef.current);
     setError(null);
     if (query.trim().length < 2) {
-      setSuggestions([]);
-      setTranslation(null);
-      setSelectedWord(null);
+      setSuggestions([]); setTranslation(null); setSelectedWord(null);
       return;
     }
     debounceRef.current = setTimeout(async () => {
@@ -83,7 +135,6 @@ export default function VocabularyPage() {
           const data: SearchSuggestion[] = await res.json();
           const results = data.map((d) => d.value).slice(0, 6);
           setSuggestions(results);
-          // Translate the best match (first suggestion), not the raw partial query
           translate(results.length > 0 ? results[0] : query, false);
         } else {
           translate(query, false);
@@ -94,21 +145,22 @@ export default function VocabularyPage() {
     }, 350);
   }, [query, dir, translate]);
 
-  // Reset on direction change
   useEffect(() => {
     setQuery(""); setSuggestions([]); setTranslation(null);
-    setSelectedWord(null); setError(null);
+    setSelectedWord(null); setError(null); setIsFav(false);
   }, [dir]);
 
-  const pickWord = (word: string) => {
-    setQuery(word);
-    setSuggestions([]);
-    translate(word);
-  };
-
+  const pickWord = (word: string) => { setQuery(word); setSuggestions([]); translate(word); };
   const clearAll = () => {
     setQuery(""); setSuggestions([]); setTranslation(null);
-    setSelectedWord(null); setError(null);
+    setSelectedWord(null); setError(null); setIsFav(false);
+  };
+
+  const handleToggleFav = () => {
+    if (!selectedWord || !translation) return;
+    const updated = toggleFavSaved({ word: selectedWord, translation, dir });
+    setFavorites(updated);
+    setIsFav(!isFav);
   };
 
   // ─────────────────────────────────────────────────────────────
@@ -133,20 +185,28 @@ export default function VocabularyPage() {
 
         {/* Direction toggle */}
         <div className="flex rounded-2xl p-1 mb-4" style={{ background: "#e2e8f0" }}>
-          {(["ru→bur", "bur→ru"] as Direction[]).map((d) => (
-            <button
-              key={d}
-              onClick={() => setDir(d)}
-              className="flex-1 py-2.5 rounded-xl text-xs font-bold transition-all duration-200 active:scale-95"
-              style={{
-                background: dir === d ? "white" : "transparent",
-                color: dir === d ? "#1d4ed8" : "#64748b",
-                boxShadow: dir === d ? "0 1px 4px rgba(0,0,0,0.1)" : "none",
-              }}
-            >
-              {d === "ru→bur" ? "🇷🇺 Русский → Бурятский" : "Бурятский → 🇷🇺 Русский"}
-            </button>
-          ))}
+          <button
+            onClick={() => setDir("ru→bur")}
+            className="flex-1 py-2.5 rounded-xl text-xs font-bold transition-all duration-200 active:scale-95 flex items-center justify-center gap-1.5"
+            style={{
+              background: dir === "ru→bur" ? "white" : "transparent",
+              color: dir === "ru→bur" ? "#1d4ed8" : "#64748b",
+              boxShadow: dir === "ru→bur" ? "0 1px 4px rgba(0,0,0,0.1)" : "none",
+            }}
+          >
+            🇷🇺 → <BuryatFlag />
+          </button>
+          <button
+            onClick={() => setDir("bur→ru")}
+            className="flex-1 py-2.5 rounded-xl text-xs font-bold transition-all duration-200 active:scale-95 flex items-center justify-center gap-1.5"
+            style={{
+              background: dir === "bur→ru" ? "white" : "transparent",
+              color: dir === "bur→ru" ? "#1d4ed8" : "#64748b",
+              boxShadow: dir === "bur→ru" ? "0 1px 4px rgba(0,0,0,0.1)" : "none",
+            }}
+          >
+            <BuryatFlag /> → 🇷🇺
+          </button>
         </div>
 
         {/* Search field */}
@@ -180,7 +240,7 @@ export default function VocabularyPage() {
           )}
         </div>
 
-        {/* Suggestions — inline chips (NOT absolute, never overlaps) */}
+        {/* Suggestions */}
         {suggestions.length > 0 && (
           <div className="flex flex-wrap gap-2 mt-3">
             {suggestions.map((s) => (
@@ -189,12 +249,7 @@ export default function VocabularyPage() {
                 type="button"
                 onClick={() => pickWord(s)}
                 className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm font-semibold transition-all duration-150 active:scale-95"
-                style={{
-                  background: "white",
-                  color: "#1d4ed8",
-                  border: "1.5px solid #dbeafe",
-                  boxShadow: "0 1px 4px rgba(0,0,0,0.06)",
-                }}
+                style={{ background: "white", color: "#1d4ed8", border: "1.5px solid #dbeafe", boxShadow: "0 1px 4px rgba(0,0,0,0.06)" }}
               >
                 <svg width="11" height="11" viewBox="0 0 24 24" fill="none">
                   <circle cx="11" cy="11" r="7" stroke="#93c5fd" strokeWidth="2.5" />
@@ -206,19 +261,21 @@ export default function VocabularyPage() {
           </div>
         )}
 
-        {/* Translation result — always below suggestions */}
+        {/* Loading */}
         {loadingTranslate && (
           <div className="mt-4 rounded-2xl p-5 text-center" style={{ background: "white", border: "2px solid #e2e8f0" }}>
             <div className="w-7 h-7 rounded-full mx-auto" style={{ border: "3px solid #e2e8f0", borderTopColor: "#1d4ed8", animation: "spin 0.7s linear infinite" }} />
           </div>
         )}
 
+        {/* Error */}
         {error && !loadingTranslate && (
           <div className="mt-4 rounded-2xl p-4" style={{ background: "#fef2f2", border: "1.5px solid #fecaca" }}>
             <p className="text-sm font-semibold text-center" style={{ color: "#dc2626" }}>{error}</p>
           </div>
         )}
 
+        {/* Translation result */}
         {translation && selectedWord && !loadingTranslate && (
           <div className="mt-4 rounded-2xl overflow-hidden card-reveal" style={{ boxShadow: "0 4px 20px rgba(0,0,0,0.07)" }}>
             <div className="px-4 py-3 flex items-center gap-2" style={{ background: "linear-gradient(135deg, #1e3a5f, #1d4ed8)" }}>
@@ -226,9 +283,18 @@ export default function VocabularyPage() {
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
                 <path d="M5 12h14M12 5l7 7-7 7" stroke="rgba(255,255,255,0.7)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
               </svg>
-              <span className="text-xs font-semibold" style={{ color: "rgba(255,255,255,0.65)" }}>
+              <span className="text-xs font-semibold flex-1" style={{ color: "rgba(255,255,255,0.65)" }}>
                 {dir === "ru→bur" ? "бурятский" : "русский"}
               </span>
+              {/* Favorites star */}
+              <button
+                onClick={handleToggleFav}
+                className="w-8 h-8 rounded-full flex items-center justify-center transition-all duration-150 active:scale-90"
+                style={{ background: isFav ? "rgba(251,191,36,0.2)" : "rgba(255,255,255,0.12)" }}
+                title={isFav ? "Убрать из избранного" : "Добавить в избранное"}
+              >
+                <StarIcon filled={isFav} />
+              </button>
             </div>
             <div className="px-4 py-4" style={{ background: "white" }}>
               <p className="text-lg font-bold leading-relaxed" style={{ color: "#1e3a5f" }}>{translation}</p>
@@ -236,9 +302,41 @@ export default function VocabularyPage() {
           </div>
         )}
 
-        {/* Empty state: history + example chips */}
+        {/* Empty state: favorites + history + examples */}
         {!query && !translation && (
           <div className="mt-4">
+
+            {/* Favorites */}
+            {favorites.length > 0 && (
+              <>
+                <div className="flex items-center justify-between mb-2">
+                  <p className="text-xs font-bold uppercase tracking-widest" style={{ color: "#94a3b8" }}>
+                    ⭐ Избранное
+                  </p>
+                  <button
+                    onClick={() => { localStorage.removeItem(FAVS_KEY); setFavorites([]); }}
+                    className="text-xs font-semibold"
+                    style={{ color: "#94a3b8" }}
+                  >
+                    Очистить
+                  </button>
+                </div>
+                <div className="flex flex-wrap gap-2 mb-5">
+                  {favorites.map((f) => (
+                    <button
+                      key={`${f.dir}-${f.word}`}
+                      onClick={() => { setDir(f.dir); setQuery(f.word); translate(f.word); }}
+                      className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm font-semibold transition active:scale-95"
+                      style={{ background: "#fffbeb", color: "#d97706", border: "1.5px solid #fde68a" }}
+                    >
+                      ⭐ {f.word}
+                    </button>
+                  ))}
+                </div>
+              </>
+            )}
+
+            {/* History */}
             {history.length > 0 && (
               <>
                 <div className="flex items-center justify-between mb-2">

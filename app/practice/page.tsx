@@ -288,8 +288,8 @@ export default function PracticePage() {
 
   // Study mode state — directional flip
   const [flipDir, setFlipDir]       = useState<FlipDir>(null);
-  const touchStartX                 = useRef<number|null>(null);
-  const swipeUsed                   = useRef(false);
+  const [dragX, setDragX]           = useState(0);
+  const pointerStartX               = useRef<number|null>(null);
 
   // Quiz mode state
   const [shuffledCards, setShuffledCards] = useState<FlashCard[]>([]);
@@ -330,23 +330,38 @@ export default function PracticePage() {
   // ── Study mode ──────────────────────────────────────────────
   const flipCard = (dir: "right"|"left") => {
     setFlipDir(d=> d!==null ? null : dir);
+    setDragX(0);
   };
 
-  const handleCardTap = (e: React.MouseEvent<HTMLDivElement>) => {
-    if(swipeUsed.current){ swipeUsed.current=false; return; }
-    const rect = e.currentTarget.getBoundingClientRect();
-    flipCard(e.clientX - rect.left > rect.width/2 ? "right" : "left");
+  const handlePointerDown = (e: React.PointerEvent<HTMLDivElement>) => {
+    e.currentTarget.setPointerCapture(e.pointerId);
+    pointerStartX.current = e.clientX;
   };
 
-  const handleTouchStart = (e: React.TouchEvent) => {
-    touchStartX.current = e.touches[0].clientX;
+  const handlePointerMove = (e: React.PointerEvent<HTMLDivElement>) => {
+    if(pointerStartX.current === null || flipDir !== null) return;
+    const dx = e.clientX - pointerStartX.current;
+    setDragX(dx);
   };
 
-  const handleTouchEnd = (e: React.TouchEvent) => {
-    if(touchStartX.current===null) return;
-    const dx = e.changedTouches[0].clientX - touchStartX.current;
-    touchStartX.current = null;
-    if(Math.abs(dx)>40){ swipeUsed.current=true; flipCard(dx>0?"right":"left"); }
+  const handlePointerUp = (e: React.PointerEvent<HTMLDivElement>) => {
+    if(pointerStartX.current === null) return;
+    const dx = e.clientX - pointerStartX.current;
+    pointerStartX.current = null;
+    if(Math.abs(dx) > 40) {
+      flipCard(dx > 0 ? "right" : "left");
+    } else {
+      setDragX(0);
+      if(Math.abs(dx) < 10) {
+        const rect = e.currentTarget.getBoundingClientRect();
+        flipCard(e.clientX - rect.left > rect.width / 2 ? "right" : "left");
+      }
+    }
+  };
+
+  const handlePointerCancel = () => {
+    pointerStartX.current = null;
+    setDragX(0);
   };
 
   const handleStudyNext = () => {
@@ -603,7 +618,15 @@ export default function PracticePage() {
     const frontSubColor   = isColor ? (card.colorLight ? "rgba(0,0,0,0.4)" : "rgba(255,255,255,0.5)") : "rgba(255,255,255,0.5)";
     const frontHintColor  = isColor ? (card.colorLight ? "rgba(0,0,0,0.35)" : "rgba(255,255,255,0.55)") : "rgba(255,255,255,0.55)";
 
-    const flipClass = flipDir==="right" ? " flipped-right" : flipDir==="left" ? " flipped-left" : "";
+    // Compute inner transform inline so we can also show drag feedback
+    const innerTransform =
+      flipDir === "right" ? "rotateY(180deg)" :
+      flipDir === "left"  ? "rotateY(-180deg)" :
+      dragX !== 0         ? `rotateY(${Math.max(-85, Math.min(85, dragX * 0.18))}deg)` :
+      "rotateY(0deg)";
+    const innerTransition = (dragX !== 0 && flipDir === null)
+      ? "none"
+      : "transform 0.42s cubic-bezier(0.4, 0, 0.2, 1)";
 
     return (
       <div className="flex flex-col min-h-screen" style={{background:"#f8faff"}}>
@@ -633,12 +656,15 @@ export default function PracticePage() {
 
         {/* Flip card */}
         <div className="flex-1 flex flex-col items-center justify-center px-5 py-3">
-          <div className={`flip-card w-full cursor-pointer select-none${flipClass}`}
-            style={{height:290}}
-            onClick={handleCardTap}
-            onTouchStart={handleTouchStart}
-            onTouchEnd={handleTouchEnd}>
-            <div className="flip-card-inner" style={{height:"100%"}}>
+          <div
+            className="flip-card w-full cursor-pointer select-none"
+            style={{height:290, touchAction:"none"}}
+            onPointerDown={handlePointerDown}
+            onPointerMove={handlePointerMove}
+            onPointerUp={handlePointerUp}
+            onPointerCancel={handlePointerCancel}
+          >
+            <div className="flip-card-inner" style={{height:"100%", transform:innerTransform, transition:innerTransition}}>
 
               {/* FRONT */}
               <div className="flip-card-front"
