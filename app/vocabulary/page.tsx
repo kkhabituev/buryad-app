@@ -76,13 +76,25 @@ function toggleFavSaved(item: Favorite): Favorite[] {
   return [...favs];
 }
 
-// ── Buryat flag SVG ─────────────────────────────────────────────
+// ── Flag SVGs (flag emojis don't render on Windows) ─────────────
+const FLAG_STYLE: React.CSSProperties = {
+  display: "inline", verticalAlign: "middle",
+  borderRadius: 2, border: "0.5px solid rgba(0,0,0,0.12)", flexShrink: 0,
+};
+
+function RussianFlag() {
+  return (
+    <svg width="22" height="15" viewBox="0 0 22 15" style={FLAG_STYLE}>
+      <rect width="22" height="5"  fill="white" />
+      <rect y="5"  width="22" height="5"  fill="#003DA5" />
+      <rect y="10" width="22" height="5"  fill="#CC0000" />
+    </svg>
+  );
+}
+
 function BuryatFlag() {
   return (
-    <svg
-      width="22" height="15" viewBox="0 0 22 15"
-      style={{ display: "inline", verticalAlign: "middle", borderRadius: 2, border: "0.5px solid rgba(0,0,0,0.12)", flexShrink: 0 }}
-    >
+    <svg width="22" height="15" viewBox="0 0 22 15" style={FLAG_STYLE}>
       <rect width="22" height="5"  fill="#003DA5" />
       <rect y="5"  width="22" height="5"  fill="white" />
       <rect y="10" width="22" height="5"  fill="#FFD700" />
@@ -239,7 +251,7 @@ export default function VocabularyPage() {
               boxShadow: dir === "ru→bur" ? "0 1px 4px rgba(0,0,0,0.1)" : "none",
             }}
           >
-            🇷🇺 → <BuryatFlag />
+            <RussianFlag /> → <BuryatFlag />
           </button>
           <button
             onClick={() => setDir("bur→ru")}
@@ -250,7 +262,7 @@ export default function VocabularyPage() {
               boxShadow: dir === "bur→ru" ? "0 1px 4px rgba(0,0,0,0.1)" : "none",
             }}
           >
-            <BuryatFlag /> → 🇷🇺
+            <BuryatFlag /> → <RussianFlag />
           </button>
         </div>
 
