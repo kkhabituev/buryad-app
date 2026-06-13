@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback, useEffect } from "react";
+import { useState, useCallback, useEffect, useRef } from "react";
 import pronounsData from "@/content/pronouns.json";
 import numbersData from "@/content/numbers.json";
 import verbsData from "@/content/verb-conjugations.json";
@@ -72,8 +72,7 @@ function generateOptions(cards: FlashCard[], currentIdx: number): string[] {
     .map(c => c.back)
     .filter((v, i, arr) => arr.indexOf(v) === i && v !== correct);
   const shuffled = [...pool].sort(() => Math.random() - 0.5);
-  const wrong = shuffled.slice(0, 3);
-  return [correct, ...wrong].sort(() => Math.random() - 0.5);
+  return [correct, ...shuffled.slice(0, 3)].sort(() => Math.random() - 0.5);
 }
 
 // ── Main component ────────────────────────────────────────────
@@ -84,24 +83,24 @@ export default function PracticePage() {
   const [cardIndex, setCardIndex] = useState(0);
 
   // Learn mode state
-  const [knownIds, setKnownIds] = useState<Set<string>>(new Set());
-  const [wrongIds, setWrongIds] = useState<Set<string>>(new Set());
-  const [flashClass, setFlashClass] = useState("");
+  const [flipped, setFlipped] = useState(false);
+  const touchStartX = useRef<number | null>(null);
 
-  // Quiz mode state
+  // Quiz mode state — shuffled copy of cards for this session
+  const [shuffledCards, setShuffledCards] = useState<FlashCard[]>([]);
   const [quizOptions, setQuizOptions] = useState<string[]>([]);
   const [quizSelected, setQuizSelected] = useState<string | null>(null);
   const [quizAnswered, setQuizAnswered] = useState(false);
   const [quizCorrectCount, setQuizCorrectCount] = useState(0);
 
-  // Init quiz options whenever cardIndex changes in quiz mode
+  // Regenerate options when card changes in quiz mode
   useEffect(() => {
-    if (phase === "quiz" && activeSet) {
-      setQuizOptions(generateOptions(activeSet.cards, cardIndex));
+    if (phase === "quiz" && shuffledCards.length > 0) {
+      setQuizOptions(generateOptions(shuffledCards, cardIndex));
       setQuizSelected(null);
       setQuizAnswered(false);
     }
-  }, [phase, activeSet, cardIndex]);
+  }, [phase, shuffledCards, cardIndex]);
 
   const openModeSelect = useCallback((set: CardSet) => {
     setActiveSet(set);
@@ -112,11 +111,14 @@ export default function PracticePage() {
     if (!activeSet) return;
     setPracticeMode(mode);
     setCardIndex(0);
-    setKnownIds(new Set());
-    setWrongIds(new Set());
+    setFlipped(false);
     setQuizSelected(null);
     setQuizAnswered(false);
     setQuizCorrectCount(0);
+    if (mode === "quiz") {
+      // Shuffle cards so order is unpredictable each session
+      setShuffledCards([...activeSet.cards].sort(() => Math.random() - 0.5));
+    }
     setPhase(mode === "learn" ? "studying" : "quiz");
   }, [activeSet]);
 
@@ -124,36 +126,45 @@ export default function PracticePage() {
   const goToModeSelect = () => setPhase("mode_select");
 
   // ── Learn mode handlers ─────────────────────────────────────
-  const handleAnswer = (knew: boolean) => {
+  const handleStudyNext = () => {
     if (!activeSet) return;
-    const card = activeSet.cards[cardIndex];
-    if (knew) { setKnownIds(prev => new Set(prev).add(card.id)); setFlashClass("flash-success"); }
-    else      { setWrongIds(prev => new Set(prev).add(card.id)); setFlashClass("flash-error");   }
-    setTimeout(() => setFlashClass(""), 500);
     const next = cardIndex + 1;
-    if (next >= activeSet.cards.length) { setPhase("done"); }
-    else { setCardIndex(next); }
+    if (next >= activeSet.cards.length) setPhase("done");
+    else { setCardIndex(next); setFlipped(false); }
+  };
+
+  const handleStudyPrev = () => {
+    if (cardIndex > 0) { setCardIndex(c => c - 1); setFlipped(false); }
+  };
+
+  const handleCardTap = () => setFlipped(f => !f);
+
+  const handleTouchStart = (e: React.TouchEvent) => {
+    touchStartX.current = e.touches[0].clientX;
+  };
+
+  const handleTouchEnd = (e: React.TouchEvent) => {
+    if (touchStartX.current === null) return;
+    const dx = e.changedTouches[0].clientX - touchStartX.current;
+    touchStartX.current = null;
+    // Swipe threshold 40px — flip the card
+    if (Math.abs(dx) > 40) setFlipped(f => !f);
   };
 
   // ── Quiz mode handlers ──────────────────────────────────────
   const handleQuizAnswer = (option: string) => {
-    if (quizAnswered || !activeSet) return;
+    if (quizAnswered || shuffledCards.length === 0) return;
     setQuizSelected(option);
     setQuizAnswered(true);
-    const correct = activeSet.cards[cardIndex].back;
-    if (option === correct) {
+    if (option === shuffledCards[cardIndex].back) {
       setQuizCorrectCount(c => c + 1);
-      setKnownIds(prev => new Set(prev).add(activeSet.cards[cardIndex].id));
-    } else {
-      setWrongIds(prev => new Set(prev).add(activeSet.cards[cardIndex].id));
     }
   };
 
   const handleQuizNext = () => {
-    if (!activeSet) return;
     const next = cardIndex + 1;
-    if (next >= activeSet.cards.length) { setPhase("done"); }
-    else { setCardIndex(next); }
+    if (next >= shuffledCards.length) setPhase("done");
+    else setCardIndex(next);
   };
 
   // ════════════════════════════════════════════════════════════
@@ -196,7 +207,6 @@ export default function PracticePage() {
             ))}
           </div>
 
-          {/* Mode legend */}
           <div className="mt-5 rounded-2xl p-4" style={{ background: "#eff6ff", border: "1.5px solid #bfdbfe" }}>
             <p className="text-sm font-bold mb-2" style={{ color: "#1d4ed8" }}>Два режима практики</p>
             <div className="flex gap-3">
@@ -204,7 +214,7 @@ export default function PracticePage() {
                 <span className="text-base">📖</span>
                 <div>
                   <p className="text-xs font-bold" style={{ color: "#1e3a5f" }}>Обучение</p>
-                  <p className="text-xs" style={{ color: "#3b82f6" }}>Оба языка сразу на карточке</p>
+                  <p className="text-xs" style={{ color: "#3b82f6" }}>Переворачивай карточку — видишь перевод</p>
                 </div>
               </div>
               <div className="flex items-start gap-2 ml-4">
@@ -227,7 +237,6 @@ export default function PracticePage() {
   if (phase === "mode_select" && activeSet) {
     return (
       <div className="flex flex-col min-h-screen" style={{ background: "#f8faff" }}>
-        {/* Top bar */}
         <div className="px-4 pt-4 pb-3 flex items-center gap-3"
           style={{ paddingTop: "calc(env(safe-area-inset-top) + 12px)", background: "white", borderBottom: "1px solid #e2e8f0" }}>
           <button onClick={goBack} className="w-9 h-9 rounded-full flex items-center justify-center" style={{ background: "#f1f5f9" }}>
@@ -245,11 +254,9 @@ export default function PracticePage() {
           </div>
         </div>
 
-        {/* Mode cards */}
         <div className="flex-1 flex flex-col justify-center px-5 py-8 gap-4">
           <p className="text-center text-lg font-bold mb-2" style={{ color: "#0f172a" }}>Как будем учиться?</p>
 
-          {/* Learn mode */}
           <button onClick={() => startMode("learn")}
             className="w-full rounded-2xl p-5 text-left transition-all duration-200 active:scale-95"
             style={{ background: "linear-gradient(135deg, #eff6ff, #dbeafe)", border: "2px solid #bfdbfe", boxShadow: "0 4px 20px rgba(29,78,216,0.1)" }}>
@@ -260,13 +267,12 @@ export default function PracticePage() {
               </div>
               <div>
                 <p className="text-lg font-bold" style={{ color: "#1e3a5f" }}>Обучение</p>
-                <p className="text-sm mt-0.5" style={{ color: "#3b82f6" }}>Бурятский и перевод сразу на одной карточке</p>
-                <p className="text-xs mt-1" style={{ color: "#93c5fd" }}>Пролистываешь и отмечаешь что знаешь</p>
+                <p className="text-sm mt-0.5" style={{ color: "#3b82f6" }}>Переворачивай карточку — видишь перевод</p>
+                <p className="text-xs mt-1" style={{ color: "#93c5fd" }}>Свайп влево/вправо или нажми на карточку</p>
               </div>
             </div>
           </button>
 
-          {/* Quiz mode */}
           <button onClick={() => startMode("quiz")}
             className="w-full rounded-2xl p-5 text-left transition-all duration-200 active:scale-95"
             style={{ background: "linear-gradient(135deg, #fef9c3, #fde68a)", border: "2px solid #fcd34d", boxShadow: "0 4px 20px rgba(245,158,11,0.12)" }}>
@@ -278,7 +284,7 @@ export default function PracticePage() {
               <div>
                 <p className="text-lg font-bold" style={{ color: "#92400e" }}>Проверка</p>
                 <p className="text-sm mt-0.5" style={{ color: "#d97706" }}>Выбираешь правильный вариант из 4</p>
-                <p className="text-xs mt-1" style={{ color: "#f59e0b" }}>Считаем правильные ответы</p>
+                <p className="text-xs mt-1" style={{ color: "#f59e0b" }}>Карточки перемешаны — каждый раз по-новому</p>
               </div>
             </div>
           </button>
@@ -291,8 +297,47 @@ export default function PracticePage() {
   // DONE
   // ════════════════════════════════════════════════════════════
   if (phase === "done" && activeSet) {
-    const total = activeSet.cards.length;
-    const known = practiceMode === "quiz" ? quizCorrectCount : knownIds.size;
+    // Learn mode: no score, just completion
+    if (practiceMode === "learn") {
+      return (
+        <div className="page-enter flex flex-col min-h-screen" style={{ background: "#f8faff" }}>
+          <div className="px-5 pb-8 flex-1 flex flex-col items-center justify-center"
+            style={{ paddingTop: "calc(env(safe-area-inset-top) + 32px)" }}>
+            <div className="w-24 h-24 rounded-full flex items-center justify-center text-5xl mb-5"
+              style={{ background: activeSet.gradient, boxShadow: `0 8px 32px -8px ${activeSet.glow}77` }}>
+              ⭐
+            </div>
+            <h2 className="text-3xl font-bold mb-2" style={{ color: "#0f172a", fontFamily: '"Playfair Display", Georgia, serif' }}>
+              Молодец!
+            </h2>
+            <p className="text-base" style={{ color: "#64748b" }}>Все {activeSet.cards.length} карточек просмотрены</p>
+            <p className="text-sm mt-1 font-semibold" style={{ color: activeSet.glow }}>{activeSet.emoji} {activeSet.title}</p>
+          </div>
+
+          <div className="px-4 pb-24 flex flex-col gap-3">
+            <button onClick={() => startMode("learn")}
+              className="w-full py-4 rounded-2xl font-bold text-base text-white transition active:scale-95"
+              style={{ background: activeSet.gradient, boxShadow: `0 4px 16px -4px ${activeSet.glow}66` }}>
+              🔄 Просмотреть ещё раз
+            </button>
+            <button onClick={() => startMode("quiz")}
+              className="w-full py-4 rounded-2xl font-bold text-base transition active:scale-95"
+              style={{ background: "linear-gradient(135deg, #fef9c3, #fde68a)", color: "#92400e", border: "1.5px solid #fcd34d" }}>
+              🎯 Перейти к проверке
+            </button>
+            <button onClick={goBack}
+              className="w-full py-4 rounded-2xl font-bold text-base transition active:scale-95"
+              style={{ background: "#f1f5f9", color: "#475569" }}>
+              ← Все наборы
+            </button>
+          </div>
+        </div>
+      );
+    }
+
+    // Quiz mode: show score
+    const total = shuffledCards.length || activeSet.cards.length;
+    const known = quizCorrectCount;
     const pct = Math.round((known / total) * 100);
     const perfect = known === total;
 
@@ -307,9 +352,7 @@ export default function PracticePage() {
           <h2 className="text-3xl font-bold mb-1" style={{ color: "#0f172a", fontFamily: '"Playfair Display", Georgia, serif' }}>
             {perfect ? "Идеально!" : pct >= 70 ? "Отлично!" : "Хорошая работа!"}
           </h2>
-          <p className="text-sm mb-1" style={{ color: "#64748b" }}>
-            {practiceMode === "quiz" ? "Проверка завершена" : "Обучение завершено"}
-          </p>
+          <p className="text-sm mb-1" style={{ color: "#64748b" }}>Проверка завершена</p>
           <p className="text-base" style={{ color: "#64748b" }}>{known} из {total} правильно</p>
 
           <div className="w-full max-w-xs mt-6">
@@ -323,7 +366,7 @@ export default function PracticePage() {
           <div className="grid grid-cols-2 gap-3 w-full max-w-xs mt-5">
             <div className="rounded-2xl p-4 text-center" style={{ background: "#ecfdf5", border: "1.5px solid #bbf7d0" }}>
               <p className="text-2xl font-bold" style={{ color: "#16a34a" }}>{known}</p>
-              <p className="text-xs mt-0.5" style={{ color: "#22c55e" }}>{practiceMode === "quiz" ? "Верно ✓" : "Знаю ✓"}</p>
+              <p className="text-xs mt-0.5" style={{ color: "#22c55e" }}>Верно ✓</p>
             </div>
             <div className="rounded-2xl p-4 text-center" style={{ background: "#fef2f2", border: "1.5px solid #fecaca" }}>
               <p className="text-2xl font-bold" style={{ color: "#dc2626" }}>{total - known}</p>
@@ -333,7 +376,7 @@ export default function PracticePage() {
         </div>
 
         <div className="px-4 pb-24 flex flex-col gap-3">
-          <button onClick={() => startMode(practiceMode)}
+          <button onClick={() => startMode("quiz")}
             className="w-full py-4 rounded-2xl font-bold text-base text-white transition active:scale-95"
             style={{ background: activeSet.gradient, boxShadow: `0 4px 16px -4px ${activeSet.glow}66` }}>
             🔄 Повторить ещё раз
@@ -354,15 +397,16 @@ export default function PracticePage() {
   }
 
   // ════════════════════════════════════════════════════════════
-  // STUDY MODE (Learn)
+  // STUDY MODE — двухсторонняя flip-карточка
   // ════════════════════════════════════════════════════════════
   if (phase === "studying" && activeSet) {
     const card = activeSet.cards[cardIndex];
     const total = activeSet.cards.length;
-    const progress = (cardIndex / total) * 100;
+    const progress = ((cardIndex) / total) * 100;
 
     return (
       <div className="flex flex-col min-h-screen" style={{ background: "#f8faff" }}>
+        {/* Top bar */}
         <div className="px-4 pt-4 pb-3 flex items-center gap-3"
           style={{ paddingTop: "calc(env(safe-area-inset-top) + 12px)", background: "white", borderBottom: "1px solid #e2e8f0" }}>
           <button onClick={goBack} className="w-9 h-9 rounded-full flex items-center justify-center" style={{ background: "#f1f5f9" }}>
@@ -371,70 +415,99 @@ export default function PracticePage() {
             </svg>
           </button>
           <div className="flex-1 rounded-full overflow-hidden" style={{ height: 8, background: "#e2e8f0" }}>
-            <div className="h-full rounded-full progress-fill" style={{ width: `${progress}%`, background: activeSet.gradient }} />
+            <div className="h-full rounded-full transition-all duration-500" style={{ width: `${progress}%`, background: activeSet.gradient }} />
           </div>
-          <span className="text-xs font-bold w-12 text-right" style={{ color: "#64748b" }}>{cardIndex}/{total}</span>
+          <span className="text-xs font-bold w-12 text-right" style={{ color: "#64748b" }}>{cardIndex + 1}/{total}</span>
         </div>
 
         <div className="px-4 pt-2 pb-1 flex items-center gap-2">
           <span className="text-xs font-bold px-2.5 py-1 rounded-full" style={{ background: activeSet.gradient, color: "white" }}>
             📖 {activeSet.emoji} {activeSet.title}
           </span>
+          <span className="text-xs" style={{ color: "#94a3b8" }}>
+            {flipped ? "↩ свайп чтобы вернуть" : "свайп или нажми чтобы перевернуть"}
+          </span>
         </div>
 
-        {/* Dual-language card — both shown at once */}
+        {/* Flip card */}
         <div className="flex-1 flex flex-col items-center justify-center px-5 py-4">
-          <div className={`w-full rounded-3xl overflow-hidden transition-all duration-200 ${flashClass}`}
-            style={{ boxShadow: "0 8px 32px rgba(0,0,0,0.08)", border: "2px solid #e2e8f0" }}>
-            {/* Buryat — top half */}
-            <div className="px-6 pt-6 pb-5 flex flex-col items-center"
-              style={{ background: activeSet.gradient, borderBottom: "2px solid rgba(255,255,255,0.15)" }}>
-              <p className="text-xs font-bold uppercase tracking-widest mb-3" style={{ color: "rgba(255,255,255,0.6)" }}>
-                Бурятский
-              </p>
-              <span className="text-4xl font-bold text-center leading-tight text-white">
-                {card.front}
-              </span>
-            </div>
-            {/* Russian — bottom half */}
-            <div className="px-6 pt-5 pb-6 flex flex-col items-center" style={{ background: "white" }}>
-              <p className="text-xs font-bold uppercase tracking-widest mb-3" style={{ color: "#94a3b8" }}>
-                Перевод
-              </p>
-              <span className="text-2xl font-bold text-center leading-snug" style={{ color: "#1e3a5f" }}>
-                {card.back}
-              </span>
-              {card.hint && (
-                <span className="block text-sm mt-2 font-medium italic text-center" style={{ color: "#94a3b8" }}>
-                  {card.hint}
-                </span>
-              )}
+          <div
+            className={`flip-card w-full cursor-pointer select-none${flipped ? " flipped" : ""}`}
+            style={{ height: 290 }}
+            onClick={handleCardTap}
+            onTouchStart={handleTouchStart}
+            onTouchEnd={handleTouchEnd}
+          >
+            <div className="flip-card-inner" style={{ height: "100%" }}>
+
+              {/* FRONT — Buryat */}
+              <div className="flip-card-front"
+                style={{ borderRadius: 24, background: activeSet.gradient, boxShadow: `0 10px 40px -8px ${activeSet.glow}55` }}>
+                <p className="text-xs font-bold uppercase tracking-widest mb-4" style={{ color: "rgba(255,255,255,0.5)" }}>
+                  Бурятский
+                </p>
+                <span className="text-4xl font-bold text-white text-center leading-tight px-6">{card.front}</span>
+                {card.hint && (
+                  <span className="text-sm mt-3 italic text-center px-6" style={{ color: "rgba(255,255,255,0.55)" }}>{card.hint}</span>
+                )}
+                <div className="mt-8 flex items-center gap-2" style={{ color: "rgba(255,255,255,0.35)" }}>
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                    <path d="M8 3H5a2 2 0 00-2 2v3m18 0V5a2 2 0 00-2-2h-3M3 16v3a2 2 0 002 2h3m8 0h3a2 2 0 002-2v-3" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                  </svg>
+                  <span className="text-xs">свайп или нажми</span>
+                </div>
+              </div>
+
+              {/* BACK — Russian */}
+              <div className="flip-card-back"
+                style={{ borderRadius: 24, background: "white", border: `2.5px solid ${activeSet.glow}28`, boxShadow: `0 10px 40px -8px ${activeSet.glow}28` }}>
+                <p className="text-xs font-bold uppercase tracking-widest mb-4" style={{ color: "#94a3b8" }}>
+                  Перевод
+                </p>
+                <span className="text-3xl font-bold text-center leading-snug px-6" style={{ color: "#1e3a5f" }}>{card.back}</span>
+                {card.hint && (
+                  <span className="text-sm mt-3 italic text-center px-6" style={{ color: "#94a3b8" }}>{card.hint}</span>
+                )}
+                <div className="mt-8 flex items-center gap-2" style={{ color: "#cbd5e1" }}>
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                    <path d="M8 3H5a2 2 0 00-2 2v3m18 0V5a2 2 0 00-2-2h-3M3 16v3a2 2 0 002 2h3m8 0h3a2 2 0 002-2v-3" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                  </svg>
+                  <span className="text-xs">свайп чтобы вернуть</span>
+                </div>
+              </div>
+
             </div>
           </div>
 
           {/* Progress dots */}
-          <div className="flex gap-1.5 mt-4">
+          <div className="flex gap-1.5 mt-5 flex-wrap justify-center max-w-xs">
             {activeSet.cards.map((c, i) => (
               <div key={c.id} className="rounded-full transition-all duration-300"
-                style={{ width: i === cardIndex ? 20 : 6, height: 6, background: i < cardIndex ? (knownIds.has(activeSet.cards[i].id) ? "#22c55e" : "#ef4444") : i === cardIndex ? "#1d4ed8" : "#e2e8f0" }} />
+                style={{
+                  width: i === cardIndex ? 20 : 6,
+                  height: 6,
+                  background: i < cardIndex ? activeSet.glow : i === cardIndex ? "#1d4ed8" : "#e2e8f0",
+                  opacity: i < cardIndex ? 0.55 : 1,
+                }}
+              />
             ))}
           </div>
         </div>
 
-        {/* Always-visible answer buttons */}
+        {/* Navigation buttons */}
         <div className="px-4 pb-24 pt-2">
           <div className="flex gap-3">
-            <button onClick={() => handleAnswer(false)}
-              className="flex-1 py-4 rounded-2xl font-bold text-base transition active:scale-95 flex flex-col items-center gap-0.5 btn-tap"
-              style={{ background: "#fef2f2", color: "#dc2626", border: "2px solid #fecaca" }}>
-              <span className="text-xl">✗</span>
-              <span className="text-sm">Ещё раз</span>
-            </button>
-            <button onClick={() => handleAnswer(true)}
-              className="flex-1 py-4 rounded-2xl font-bold text-base transition active:scale-95 flex flex-col items-center gap-0.5 btn-tap"
-              style={{ background: "#ecfdf5", color: "#16a34a", border: "2px solid #bbf7d0" }}>
-              <span className="text-xl">✓</span>
-              <span className="text-sm">Знаю!</span>
+            {cardIndex > 0 && (
+              <button onClick={handleStudyPrev}
+                className="py-4 px-6 rounded-2xl font-bold text-base transition active:scale-95"
+                style={{ background: "white", color: "#475569", border: "2px solid #e2e8f0" }}>
+                ←
+              </button>
+            )}
+            <button onClick={handleStudyNext}
+              className="flex-1 py-4 rounded-2xl font-bold text-base text-white transition active:scale-95"
+              style={{ background: activeSet.gradient, boxShadow: `0 4px 16px -4px ${activeSet.glow}66` }}>
+              {cardIndex + 1 >= total ? "Завершить ✓" : "Следующая →"}
             </button>
           </div>
         </div>
@@ -443,11 +516,11 @@ export default function PracticePage() {
   }
 
   // ════════════════════════════════════════════════════════════
-  // QUIZ MODE
+  // QUIZ MODE — рандомный порядок карточек
   // ════════════════════════════════════════════════════════════
-  if (phase === "quiz" && activeSet) {
-    const card = activeSet.cards[cardIndex];
-    const total = activeSet.cards.length;
+  if (phase === "quiz" && activeSet && shuffledCards.length > 0) {
+    const card = shuffledCards[cardIndex];
+    const total = shuffledCards.length;
     const progress = (cardIndex / total) * 100;
     const correctAnswer = card.back;
 
@@ -467,7 +540,6 @@ export default function PracticePage() {
 
     return (
       <div className="flex flex-col min-h-screen" style={{ background: "#f8faff" }}>
-        {/* Progress bar */}
         <div className="px-4 pt-4 pb-3 flex items-center gap-3"
           style={{ paddingTop: "calc(env(safe-area-inset-top) + 12px)", background: "white", borderBottom: "1px solid #e2e8f0" }}>
           <button onClick={goBack} className="w-9 h-9 rounded-full flex items-center justify-center" style={{ background: "#f1f5f9" }}>
@@ -476,10 +548,10 @@ export default function PracticePage() {
             </svg>
           </button>
           <div className="flex-1 rounded-full overflow-hidden" style={{ height: 8, background: "#e2e8f0" }}>
-            <div className="h-full rounded-full progress-fill" style={{ width: `${progress}%`, background: "linear-gradient(90deg, #f59e0b, #d97706)" }} />
+            <div className="h-full rounded-full transition-all duration-500" style={{ width: `${progress}%`, background: "linear-gradient(90deg, #f59e0b, #d97706)" }} />
           </div>
           <span className="text-xs font-bold w-16 text-right" style={{ color: "#64748b" }}>
-            {cardIndex}/{total} · 🎯{quizCorrectCount}
+            {cardIndex + 1}/{total} · 🎯{quizCorrectCount}
           </span>
         </div>
 
@@ -513,7 +585,7 @@ export default function PracticePage() {
           ))}
         </div>
 
-        {/* Next button (after answering) */}
+        {/* Next button — appears after answer */}
         <div className="px-5 pb-24 pt-1">
           {quizAnswered && (
             <button onClick={handleQuizNext}
