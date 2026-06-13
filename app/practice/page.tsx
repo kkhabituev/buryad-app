@@ -286,10 +286,12 @@ export default function PracticePage() {
   const [activeSet, setActiveSet]   = useState<CardSet|null>(null);
   const [cardIndex, setCardIndex]   = useState(0);
 
-  // Study mode state — directional flip
+  // Study mode state — directional flip + 2D drag
   const [flipDir, setFlipDir]       = useState<FlipDir>(null);
   const [dragX, setDragX]           = useState(0);
+  const [dragY, setDragY]           = useState(0);
   const pointerStartX               = useRef<number|null>(null);
+  const pointerStartY               = useRef<number|null>(null);
 
   // Quiz mode state
   const [shuffledCards, setShuffledCards] = useState<FlashCard[]>([]);
@@ -328,50 +330,71 @@ export default function PracticePage() {
   const goToModeSelect= ()=>setPhase("mode_select");
 
   // ── Study mode ──────────────────────────────────────────────
+  const resetDrag = () => { setDragX(0); setDragY(0); };
+
   const flipCard = (dir: "right"|"left") => {
     setFlipDir(d=> d!==null ? null : dir);
-    setDragX(0);
+    resetDrag();
   };
 
   const handlePointerDown = (e: React.PointerEvent<HTMLDivElement>) => {
     e.currentTarget.setPointerCapture(e.pointerId);
     pointerStartX.current = e.clientX;
+    pointerStartY.current = e.clientY;
   };
 
   const handlePointerMove = (e: React.PointerEvent<HTMLDivElement>) => {
-    if(pointerStartX.current === null || flipDir !== null) return;
-    const dx = e.clientX - pointerStartX.current;
-    setDragX(dx);
+    if(pointerStartX.current === null) return;
+    setDragX(e.clientX - pointerStartX.current);
+    setDragY(e.clientY - (pointerStartY.current ?? e.clientY));
   };
 
   const handlePointerUp = (e: React.PointerEvent<HTMLDivElement>) => {
     if(pointerStartX.current === null) return;
     const dx = e.clientX - pointerStartX.current;
+    const dy = e.clientY - (pointerStartY.current ?? e.clientY);
     pointerStartX.current = null;
+    pointerStartY.current = null;
+
     if(Math.abs(dx) > 40) {
-      flipCard(dx > 0 ? "right" : "left");
+      if(flipDir === null) {
+        // Front: flip in swipe direction
+        flipCard(dx > 0 ? "right" : "left");
+      } else {
+        // Back: any horizontal swipe unflips
+        setFlipDir(null);
+        resetDrag();
+      }
     } else {
-      setDragX(0);
-      if(Math.abs(dx) < 10) {
-        const rect = e.currentTarget.getBoundingClientRect();
-        flipCard(e.clientX - rect.left > rect.width / 2 ? "right" : "left");
+      resetDrag();
+      // Pure tap (tiny movement)
+      if(Math.abs(dx) < 12 && Math.abs(dy) < 12) {
+        if(flipDir !== null) {
+          // On back: tap to unflip
+          setFlipDir(null);
+        } else {
+          // On front: tap left/right half to flip that direction
+          const rect = e.currentTarget.getBoundingClientRect();
+          flipCard(e.clientX - rect.left > rect.width / 2 ? "right" : "left");
+        }
       }
     }
   };
 
   const handlePointerCancel = () => {
     pointerStartX.current = null;
-    setDragX(0);
+    pointerStartY.current = null;
+    resetDrag();
   };
 
   const handleStudyNext = () => {
     if(!activeSet) return;
     const next = cardIndex+1;
     if(next>=activeSet.cards.length) setPhase("done");
-    else { setCardIndex(next); setFlipDir(null); }
+    else { setCardIndex(next); setFlipDir(null); resetDrag(); }
   };
   const handleStudyPrev = () => {
-    if(cardIndex>0){ setCardIndex(c=>c-1); setFlipDir(null); }
+    if(cardIndex>0){ setCardIndex(c=>c-1); setFlipDir(null); resetDrag(); }
   };
 
   // ── Quiz mode ───────────────────────────────────────────────
@@ -618,13 +641,15 @@ export default function PracticePage() {
     const frontSubColor   = isColor ? (card.colorLight ? "rgba(0,0,0,0.4)" : "rgba(255,255,255,0.5)") : "rgba(255,255,255,0.5)";
     const frontHintColor  = isColor ? (card.colorLight ? "rgba(0,0,0,0.35)" : "rgba(255,255,255,0.55)") : "rgba(255,255,255,0.55)";
 
-    // Compute inner transform inline so we can also show drag feedback
-    const innerTransform =
-      flipDir === "right" ? "rotateY(180deg)" :
-      flipDir === "left"  ? "rotateY(-180deg)" :
-      dragX !== 0         ? `rotateY(${Math.max(-85, Math.min(85, dragX * 0.18))}deg)` :
-      "rotateY(0deg)";
-    const innerTransition = (dragX !== 0 && flipDir === null)
+    // 2D free rotation: base angle (0 or ±180) + live drag on both axes
+    const baseY    = flipDir === "right" ? 180 : flipDir === "left" ? -180 : 0;
+    const isDragging = dragX !== 0 || dragY !== 0;
+    const rotY     = Math.max(-72, Math.min(72, dragX * 0.18));
+    const rotX     = Math.max(-28, Math.min(28, -dragY * 0.1));
+    const innerTransform = isDragging
+      ? `rotateY(${baseY + rotY}deg) rotateX(${rotX}deg)`
+      : `rotateY(${baseY}deg)`;
+    const innerTransition = isDragging
       ? "none"
       : "transform 0.42s cubic-bezier(0.4, 0, 0.2, 1)";
 
