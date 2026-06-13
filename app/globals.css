@@ -49,6 +49,14 @@
   -webkit-transform: rotateY(180deg);
   transform: rotateY(180deg);
 }
+.flip-card.flipped-right .flip-card-inner {
+  -webkit-transform: rotateY(180deg);
+  transform: rotateY(180deg);
+}
+.flip-card.flipped-left .flip-card-inner {
+  -webkit-transform: rotateY(-180deg);
+  transform: rotateY(-180deg);
+}
 .flip-card-front,
 .flip-card-back {
   position: absolute;

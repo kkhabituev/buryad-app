@@ -52,6 +52,17 @@ const navItems = [
     ),
   },
   {
+    href: "/phrasebook",
+    label: "Фразы",
+    exact: false,
+    icon: (active: boolean) => (
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+        <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z" stroke={active ? "#1d4ed8" : "#94a3b8"} strokeWidth="2" fill={active ? "rgba(29,78,216,0.1)" : "none"} strokeLinejoin="round" />
+        <path d="M8 10h8M8 14h5" stroke={active ? "#1d4ed8" : "#94a3b8"} strokeWidth="1.5" strokeLinecap="round" />
+      </svg>
+    ),
+  },
+  {
     href: "/practice",
     label: "Практика",
     exact: false,
