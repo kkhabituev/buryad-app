@@ -12,6 +12,48 @@ type SearchResult = Phrase & {
   phraseIdx: number;
 };
 
+// Copy to clipboard button
+function CopyButton({ text }: { text: string }) {
+  const [copied, setCopied] = useState(false);
+  const copy = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    navigator.clipboard.writeText(text).then(() => {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 1500);
+    });
+  };
+  return (
+    <button
+      onClick={copy}
+      title="Скопировать"
+      className="flex-shrink-0 flex items-center gap-1 rounded-lg px-2 py-1 transition-all duration-150 active:scale-95"
+      style={{
+        background: copied ? "#dcfce7" : "rgba(29,78,216,0.08)",
+        color: copied ? "#16a34a" : "#64748b",
+        border: `1px solid ${copied ? "#bbf7d0" : "rgba(29,78,216,0.15)"}`,
+        fontSize: "0.7rem", fontWeight: 700,
+      }}
+    >
+      {copied ? (
+        <>
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none">
+            <path d="M20 6 9 17l-5-5" stroke="#16a34a" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
+          </svg>
+          Скопировано
+        </>
+      ) : (
+        <>
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none">
+            <rect x="9" y="9" width="13" height="13" rx="2" stroke="#64748b" strokeWidth="2"/>
+            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" stroke="#64748b" strokeWidth="2"/>
+          </svg>
+          Копировать
+        </>
+      )}
+    </button>
+  );
+}
+
 // Highlight matched substring
 function HL({ text, q }: { text: string; q: string }): React.ReactNode {
   if (!q) return <>{text}</>;
@@ -188,7 +230,10 @@ export default function PhrasebookPage() {
                     {isOpen && (
                       <div className="px-4 pb-4 pt-1" style={{ borderTop: "1px solid #eff6ff" }}>
                         <div className="rounded-xl p-3" style={{ background: "#eff6ff" }}>
-                          <p className="text-xs font-bold uppercase tracking-widest mb-1" style={{ color: "#94a3b8" }}>Перевод</p>
+                          <div className="flex items-center justify-between mb-1">
+                            <p className="text-xs font-bold uppercase tracking-widest" style={{ color: "#94a3b8" }}>Перевод</p>
+                            <CopyButton text={p.russian} />
+                          </div>
                           <p className="text-base font-bold" style={{ color: "#1d4ed8" }}>{p.russian}</p>
                         </div>
                         {("note" in p && typeof (p as { note?: string }).note === "string") && (
@@ -264,7 +309,10 @@ export default function PhrasebookPage() {
                     {isOpen && (
                       <div className="px-4 pb-4 pt-1" style={{ borderTop: "1px solid #eff6ff" }}>
                         <div className="rounded-xl p-3" style={{ background: "#eff6ff" }}>
-                          <p className="text-xs font-bold uppercase tracking-widest mb-1" style={{ color: "#94a3b8" }}>Перевод</p>
+                          <div className="flex items-center justify-between mb-1">
+                            <p className="text-xs font-bold uppercase tracking-widest" style={{ color: "#94a3b8" }}>Перевод</p>
+                            <CopyButton text={phrase.russian} />
+                          </div>
                           <p className="text-base font-bold" style={{ color: "#1d4ed8" }}>{phrase.russian}</p>
                         </div>
                         {(phrase as { note?: string }).note && (
