@@ -232,7 +232,7 @@ export default function PhrasebookPage() {
                         <div className="rounded-xl p-3" style={{ background: "#eff6ff" }}>
                           <div className="flex items-center justify-between mb-1">
                             <p className="text-xs font-bold uppercase tracking-widest" style={{ color: "#94a3b8" }}>Перевод</p>
-                            <CopyButton text={p.russian} />
+                            <CopyButton text={p.buryat} />
                           </div>
                           <p className="text-base font-bold" style={{ color: "#1d4ed8" }}>{p.russian}</p>
                         </div>
@@ -311,7 +311,7 @@ export default function PhrasebookPage() {
                         <div className="rounded-xl p-3" style={{ background: "#eff6ff" }}>
                           <div className="flex items-center justify-between mb-1">
                             <p className="text-xs font-bold uppercase tracking-widest" style={{ color: "#94a3b8" }}>Перевод</p>
-                            <CopyButton text={phrase.russian} />
+                            <CopyButton text={phrase.buryat} />
                           </div>
                           <p className="text-base font-bold" style={{ color: "#1d4ed8" }}>{phrase.russian}</p>
                         </div>

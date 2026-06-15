@@ -76,6 +76,47 @@ function toggleFavSaved(item: Favorite): Favorite[] {
   return [...favs];
 }
 
+// ── Copy button ─────────────────────────────────────────────────
+function CopyButton({ text }: { text: string }) {
+  const [copied, setCopied] = useState(false);
+  const copy = () => {
+    navigator.clipboard.writeText(text).then(() => {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 1500);
+    });
+  };
+  return (
+    <button
+      onClick={copy}
+      title="Скопировать перевод"
+      className="flex items-center gap-1 rounded-lg px-2.5 py-1.5 transition-all duration-150 active:scale-95"
+      style={{
+        background: copied ? "#dcfce7" : "#f1f5f9",
+        color: copied ? "#16a34a" : "#64748b",
+        border: `1px solid ${copied ? "#bbf7d0" : "#e2e8f0"}`,
+        fontSize: "0.72rem", fontWeight: 700,
+      }}
+    >
+      {copied ? (
+        <>
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none">
+            <path d="M20 6 9 17l-5-5" stroke="#16a34a" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
+          </svg>
+          Скопировано
+        </>
+      ) : (
+        <>
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none">
+            <rect x="9" y="9" width="13" height="13" rx="2" stroke="#64748b" strokeWidth="2"/>
+            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" stroke="#64748b" strokeWidth="2"/>
+          </svg>
+          Копировать
+        </>
+      )}
+    </button>
+  );
+}
+
 // ── Flag SVGs (flag emojis don't render on Windows) ─────────────
 const FLAG_STYLE: React.CSSProperties = {
   display: "inline", verticalAlign: "middle",
@@ -377,8 +418,9 @@ export default function VocabularyPage() {
                 <StarIcon filled={isFav} />
               </button>
             </div>
-            <div className="px-4 py-4" style={{ background: "white" }}>
-              <p className="text-lg font-bold leading-relaxed" style={{ color: "#1e3a5f" }}>{translation}</p>
+            <div className="px-4 py-4 flex items-start justify-between gap-3" style={{ background: "white" }}>
+              <p className="text-lg font-bold leading-relaxed flex-1" style={{ color: "#1e3a5f" }}>{translation}</p>
+              <CopyButton text={translation} />
             </div>
           </div>
         )}

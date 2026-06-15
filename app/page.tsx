@@ -134,13 +134,74 @@ export default function HomePage() {
               Практика · Дасхал
             </p>
             <p className="text-xs mt-0.5" style={{ color: "rgba(255,255,255,0.85)" }}>
-              17 наборов флэш-карточек · обучение и проверка
+              20 наборов флэш-карточек · обучение и проверка
             </p>
           </div>
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" className="flex-shrink-0">
             <path d="M5 12h14M12 5l7 7-7 7" stroke="rgba(255,255,255,0.85)" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
           </svg>
         </Link>
+      </div>
+
+      {/* USEFUL LINKS */}
+      <div className="px-4 pb-28">
+        <p className="text-xs font-bold uppercase tracking-widest mb-3" style={{ color: "#94a3b8" }}>
+          Полезные ссылки
+        </p>
+        <div className="space-y-2">
+          {[
+            {
+              href: "https://nom.buryat-lang.ru/",
+              emoji: "📚",
+              title: "Учебник бурятского языка",
+              desc: "nom.buryat-lang.ru",
+              bg: "#eff6ff",
+            },
+            {
+              href: "https://ru.wikipedia.org/wiki/%D0%91%D1%83%D1%80%D1%8F%D1%82%D1%81%D0%BA%D0%B8%D0%B9_%D1%8F%D0%B7%D1%8B%D0%BA",
+              emoji: "🌐",
+              title: "Бурятский язык",
+              desc: "Статья в Википедии",
+              bg: "#f0fdf4",
+            },
+            {
+              href: "https://ru.wikipedia.org/wiki/%D0%91%D1%83%D1%80%D1%8F%D1%82%D1%81%D0%BA%D0%B0%D1%8F_%D0%BF%D0%B8%D1%81%D1%8C%D0%BC%D0%B5%D0%BD%D0%BD%D0%BE%D1%81%D1%82%D1%8C",
+              emoji: "✍️",
+              title: "Бурятская письменность",
+              desc: "Статья в Википедии",
+              bg: "#fef9c3",
+            },
+          ].map((link) => (
+            <a
+              key={link.href}
+              href={link.href}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-3 rounded-2xl p-3.5 transition-all duration-200 active:scale-95"
+              style={{
+                background: "white",
+                border: "1.5px solid #e2e8f0",
+                boxShadow: "0 1px 6px rgba(0,0,0,0.04)",
+                display: "flex",
+                textDecoration: "none",
+              }}
+            >
+              <div
+                className="w-10 h-10 rounded-xl flex items-center justify-center text-xl flex-shrink-0"
+                style={{ background: link.bg }}
+              >
+                {link.emoji}
+              </div>
+              <div className="flex-1 min-w-0">
+                <p className="text-sm font-bold" style={{ color: "#0f172a" }}>{link.title}</p>
+                <p className="text-xs mt-0.5" style={{ color: "#94a3b8" }}>{link.desc}</p>
+              </div>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" className="flex-shrink-0">
+                <path d="M7 17 17 7M7 7h10v10" stroke="#cbd5e1" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+            </a>
+          ))}
+        </div>
       </div>
     </div>
   );
