@@ -3,7 +3,7 @@
 import { useState } from "react";
 import numbersData from "@/content/numbers.json";
 
-type TopicTab = "numbers" | "colors" | "animals" | "family" | "food" | "body" | "nature" | "weather" | "emotions" | "time";
+type TopicTab = "numbers" | "colors" | "animals" | "family" | "food" | "body" | "nature" | "weather" | "emotions" | "time" | "verbs";
 type NumberTab = "units" | "tens" | "large";
 
 // ── Colors ────────────────────────────────────────────────────
@@ -128,6 +128,37 @@ const TIME_OTHER = [
   { ru: "год",     buryat: "жэл",          emoji: "🎊" },
 ];
 
+// ── Verbs ─────────────────────────────────────────────────────
+const VERBS = [
+  { buryat: "ябаха",     ru: "ходить, идти",          emoji: "🚶", group: "Движение" },
+  { buryat: "ерэхэ",     ru: "приходить",              emoji: "👋", group: "Движение" },
+  { buryat: "ошохо",     ru: "уходить, уезжать",       emoji: "🚪", group: "Движение" },
+  { buryat: "гүйхэ",     ru: "бежать",                 emoji: "🏃", group: "Движение" },
+  { buryat: "hуухa",     ru: "сидеть, садиться",       emoji: "🪑", group: "Движение" },
+  { buryat: "зогсохо",   ru: "стоять, остановиться",   emoji: "🛑", group: "Движение" },
+  { buryat: "абаха",     ru: "брать, взять",           emoji: "🤲", group: "Движение" },
+  { buryat: "үгэхэ",     ru: "давать, отдавать",       emoji: "🎁", group: "Движение" },
+  { buryat: "олохо",     ru: "находить",               emoji: "🔍", group: "Движение" },
+  { buryat: "хүлеэхэ",   ru: "ждать, ожидать",         emoji: "⏳", group: "Движение" },
+  { buryat: "хэлэхэ",    ru: "говорить, сказать",      emoji: "💬", group: "Общение" },
+  { buryat: "асуухa",    ru: "спрашивать",              emoji: "❓", group: "Общение" },
+  { buryat: "харюусаха", ru: "отвечать",                emoji: "💡", group: "Общение" },
+  { buryat: "мэдэхэ",   ru: "знать",                   emoji: "🧠", group: "Общение" },
+  { buryat: "дуулаха",  ru: "петь; слышать",            emoji: "🎵", group: "Общение" },
+  { buryat: "харахa",   ru: "видеть, смотреть",         emoji: "👀", group: "Общение" },
+  { buryat: "уншаха",   ru: "читать",                   emoji: "📖", group: "Общение" },
+  { buryat: "бэшэхэ",   ru: "писать",                   emoji: "✍️", group: "Общение" },
+  { buryat: "шадаха",   ru: "мочь, уметь",              emoji: "💪", group: "Общение" },
+  { buryat: "хэхэ",     ru: "делать",                   emoji: "🔨", group: "Общение" },
+  { buryat: "эдихэ",    ru: "кушать, есть",             emoji: "🍽️", group: "Быт" },
+  { buryat: "ууха",     ru: "пить",                     emoji: "🥤", group: "Быт" },
+  { buryat: "унтаха",   ru: "спать",                    emoji: "😴", group: "Быт" },
+  { buryat: "наадаха",  ru: "играть",                   emoji: "🎮", group: "Быт" },
+  { buryat: "нээхэ",    ru: "открывать",                emoji: "🔓", group: "Быт" },
+  { buryat: "хааха",    ru: "закрывать",                emoji: "🔒", group: "Быт" },
+];
+const VERB_GROUPS = ["Движение", "Общение", "Быт"];
+
 // ── Nav config ────────────────────────────────────────────────
 const TOPIC_TABS: { id: TopicTab; label: string }[] = [
   { id: "numbers",  label: "🔢 Числа"    },
@@ -140,6 +171,7 @@ const TOPIC_TABS: { id: TopicTab; label: string }[] = [
   { id: "weather",  label: "🌤️ Погода"   },
   { id: "emotions", label: "😊 Эмоции"   },
   { id: "time",     label: "⏰ Время"    },
+  { id: "verbs",    label: "📝 Глаголы"  },
 ];
 
 // ── NumberList ────────────────────────────────────────────────
@@ -189,7 +221,7 @@ export default function TopicsPage() {
         <div className="absolute" style={{ top: -30, right: -20, width: 150, height: 150, borderRadius: "50%", background: "radial-gradient(circle, rgba(249,115,22,0.25), transparent 70%)" }} />
         <p className="text-xs font-bold uppercase tracking-widest mb-1" style={{ color: "rgba(255,255,255,0.5)" }}>Үгын бүлэгүүд</p>
         <h1 className="text-3xl font-bold text-white" style={{ fontFamily: '"Playfair Display", Georgia, serif' }}>Подборки</h1>
-        <p className="text-sm mt-1" style={{ color: "rgba(255,255,255,0.65)" }}>10 тематических коллекций</p>
+        <p className="text-sm mt-1" style={{ color: "rgba(255,255,255,0.65)" }}>11 тематических коллекций</p>
       </div>
 
       {/* Scrollable topic tab bar */}
@@ -514,6 +546,39 @@ export default function TopicsPage() {
             <p className="text-sm font-bold" style={{ color: "#075985" }}>💡 Интересно</p>
             <p className="text-xs mt-1 leading-relaxed" style={{ color: "#0369a1" }}>
               «Долоон хоног» (неделя) буквально — «семь ночей». «Үглөөдэр» (завтра) и «үглөө» (утро) — однокоренные слова!
+            </p>
+          </div>
+        </div>
+      )}
+
+      {/* ── ГЛАГОЛЫ ────────────────────────────────────── */}
+      {topicTab === "verbs" && (
+        <div className="px-4 pt-4 pb-24">
+          <p className="text-xs font-bold uppercase tracking-widest mb-4" style={{ color: "#94a3b8" }}>Үйлэ үгэнүүд — глаголы по-бурятски</p>
+          {VERB_GROUPS.map((group) => {
+            const groupVerbs = VERBS.filter(v => v.group === group);
+            return (
+              <div key={group} className="mb-5">
+                <p className="text-xs font-bold uppercase tracking-widest mb-2" style={{ color: "#64748b" }}>{group}</p>
+                <div className="rounded-2xl overflow-hidden" style={{ border: "2px solid #e2e8f0", background: "white" }}>
+                  {groupVerbs.map((v, i) => (
+                    <div key={v.buryat} className="flex items-center gap-3 px-4 py-2.5"
+                      style={{ borderTop: i === 0 ? "none" : "1px solid #f1f5f9", background: i % 2 === 0 ? "white" : "#f8faff" }}>
+                      <span style={{ fontSize: "1.5rem", lineHeight: 1, width: 32, textAlign: "center" as const }}>{v.emoji}</span>
+                      <div className="flex-1">
+                        <p className="font-bold" style={{ color: "#0f172a" }}>{v.buryat}</p>
+                        <p className="text-xs font-semibold mt-0.5" style={{ color: "#64748b" }}>{v.ru}</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            );
+          })}
+          <div className="mt-2 rounded-2xl p-4" style={{ background: "linear-gradient(135deg, #eff6ff, #dbeafe)", border: "1.5px solid #bfdbfe" }}>
+            <p className="text-sm font-bold" style={{ color: "#1d4ed8" }}>💡 Инфинитив на -ха / -хэ / -хо</p>
+            <p className="text-xs mt-1 leading-relaxed" style={{ color: "#3b82f6" }}>
+              Бурятский инфинитив оканчивается на «-ха», «-хэ» или «-хо»: яба<b>ха</b> (идти), хэлэ<b>хэ</b> (говорить), зогсо<b>хо</b> (стоять).
             </p>
           </div>
         </div>

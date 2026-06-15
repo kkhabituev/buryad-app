@@ -129,6 +129,39 @@ const P_TIME = [
   { buryat: "жэл",         ru: "год",     emoji: "🎊" },
 ];
 
+const P_VERBS1 = [
+  { buryat: "ябаха",    ru: "ходить, идти",         emoji: "🚶" },
+  { buryat: "ерэхэ",    ru: "приходить",             emoji: "👋" },
+  { buryat: "ошохо",    ru: "уходить, уезжать",      emoji: "🚪" },
+  { buryat: "гүйхэ",    ru: "бежать",                emoji: "🏃" },
+  { buryat: "hуухa",    ru: "сидеть, садиться",      emoji: "🪑" },
+  { buryat: "зогсохо",  ru: "стоять, останавливаться",emoji: "🛑" },
+  { buryat: "абаха",    ru: "брать, взять",          emoji: "🤲" },
+  { buryat: "үгэхэ",    ru: "давать, отдавать",      emoji: "🎁" },
+  { buryat: "олохо",    ru: "находить",              emoji: "🔍" },
+  { buryat: "хүлеэхэ",  ru: "ждать, ожидать",        emoji: "⏳" },
+];
+const P_VERBS2 = [
+  { buryat: "хэлэхэ",    ru: "говорить, сказать",   emoji: "💬" },
+  { buryat: "асуухa",    ru: "спрашивать",           emoji: "❓" },
+  { buryat: "харюусаха", ru: "отвечать",             emoji: "💡" },
+  { buryat: "мэдэхэ",   ru: "знать",                emoji: "🧠" },
+  { buryat: "дуулаха",  ru: "петь; слышать",         emoji: "🎵" },
+  { buryat: "харахa",   ru: "видеть, смотреть",      emoji: "👀" },
+  { buryat: "уншаха",   ru: "читать",                emoji: "📖" },
+  { buryat: "бэшэхэ",   ru: "писать",                emoji: "✍️" },
+  { buryat: "шадаха",   ru: "мочь, уметь",           emoji: "💪" },
+  { buryat: "хэхэ",     ru: "делать",                emoji: "🔨" },
+];
+const P_VERBS3 = [
+  { buryat: "эдихэ",   ru: "кушать, есть",   emoji: "🍽️" },
+  { buryat: "ууха",    ru: "пить",            emoji: "🥤" },
+  { buryat: "унтаха",  ru: "спать",           emoji: "😴" },
+  { buryat: "наадаха", ru: "играть",          emoji: "🎮" },
+  { buryat: "нээхэ",   ru: "открывать",       emoji: "🔓" },
+  { buryat: "хааха",   ru: "закрывать",       emoji: "🔒" },
+];
+
 // Compound number helpers
 const UNITS_F: Record<number, string> = {
   1:"нэгэн",2:"хоёр",3:"гурба",4:"дурбэн",5:"табан",
@@ -264,6 +297,24 @@ const CARD_SETS: CardSet[] = [
     emoji:"⏰", gradient:"linear-gradient(140deg,#3b82f6 0%,#7c3aed 100%)", glow:"#3b82f6",
     group:"Подборки",
     cards: P_TIME.map((t,i)=>({id:`time-${i}`,front:t.buryat,back:t.ru,emoji:t.emoji})),
+  },
+  {
+    id:"verbs1", title:"Глаголы 1", subtitle:"Движение и действие",
+    emoji:"🏃", gradient:"linear-gradient(140deg,#059669 0%,#0891b2 100%)", glow:"#059669",
+    group:"Подборки",
+    cards: P_VERBS1.map((v,i)=>({id:`v1-${i}`,front:v.buryat,back:v.ru,emoji:v.emoji})),
+  },
+  {
+    id:"verbs2", title:"Глаголы 2", subtitle:"Общение и знание",
+    emoji:"💬", gradient:"linear-gradient(140deg,#7c3aed 0%,#2563eb 100%)", glow:"#7c3aed",
+    group:"Подборки",
+    cards: P_VERBS2.map((v,i)=>({id:`v2-${i}`,front:v.buryat,back:v.ru,emoji:v.emoji})),
+  },
+  {
+    id:"verbs3", title:"Глаголы 3", subtitle:"Быт и повседневность",
+    emoji:"🏠", gradient:"linear-gradient(140deg,#ea580c 0%,#dc2626 100%)", glow:"#ea580c",
+    group:"Подборки",
+    cards: P_VERBS3.map((v,i)=>({id:`v3-${i}`,front:v.buryat,back:v.ru,emoji:v.emoji})),
   },
 ];
 
