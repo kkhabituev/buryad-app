@@ -1,4 +1,5 @@
 import Link from "next/link";
+import WordOfDay from "@/components/WordOfDay";
 
 const sections = [
   {
@@ -53,7 +54,7 @@ export default function HomePage() {
         <div className="absolute" style={{ top: -60, right: -40, width: 200, height: 200, borderRadius: "50%", background: "radial-gradient(circle, rgba(245,158,11,0.25), transparent 70%)" }} />
         <div className="absolute" style={{ bottom: -30, left: -30, width: 160, height: 160, borderRadius: "50%", background: "radial-gradient(circle, rgba(59,130,246,0.3), transparent 70%)" }} />
 
-        <div className="relative px-5 pt-14 pb-10">
+        <div className="relative px-5 pt-10 pb-6">
           <div
             className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full mb-4 text-xs font-bold"
             style={{ background: "rgba(245,158,11,0.2)", color: "#fbbf24", border: "1px solid rgba(245,158,11,0.3)" }}
@@ -73,8 +74,11 @@ export default function HomePage() {
         </div>
       </div>
 
+      {/* WORD OF DAY */}
+      <WordOfDay />
+
       {/* SECTIONS */}
-      <div className="px-4 pt-5 pb-8 md:max-w-3xl md:mx-auto">
+      <div className="px-4 pt-4 pb-8 md:max-w-3xl md:mx-auto">
         <p className="text-xs font-bold uppercase tracking-widest mb-3" style={{ color: "#94a3b8" }}>
           Разделы
         </p>

@@ -290,22 +290,22 @@ const P_PHRASES_GREETING = [
   { buryat: "Сайн байна!", russian: "Здравствуйте!" },
   { buryat: "Мэндээ!", russian: "Здравствуйте!" },
   { buryat: "Амгалан үдэр!", russian: "Добрый день!" },
-  { buryat: "Ħайн байна гүт?", russian: "Как поживаете?" },
-  { buryat: "Ħайн, ħайн даа!", russian: "Хорошо, в порядке!" },
-  { buryat: "Юу ħонин бэ?", russian: "Какие новости?" },
+  { buryat: "Һайн байна гүт?", russian: "Как поживаете?" },
+  { buryat: "Һайн, һайн даа!", russian: "Хорошо, в порядке!" },
+  { buryat: "Юу һонин бэ?", russian: "Какие новости?" },
   { buryat: "Таниие үнинэй харааагүйб", russian: "Давно Вас не видел" },
   { buryat: "Хүргэхэб", russian: "Передам" },
 ];
 const P_PHRASES_JOY = [
-  { buryat: "Ехэ ħайн даа!", russian: "Очень хорошо!" },
+  { buryat: "Ехэ һайн даа!", russian: "Очень хорошо!" },
   { buryat: "Ямар гоёб!", russian: "Как красиво!" },
   { buryat: "Гайхалтай!", russian: "Удивительно!" },
   { buryat: "Би ехэ баяртай байнаб", russian: "Я очень рад(а)!" },
   { buryat: "Ямар амтатайб!", russian: "Как вкусно!" },
   { buryat: "Бэрхэ!", russian: "Молодец!" },
-  { buryat: "Юун гэħэн бэрхэб!", russian: "Какой молодец!" },
+  { buryat: "Юун гэһэн бэрхэб!", russian: "Какой молодец!" },
   { buryat: "Ямар бэлигтэйб!", russian: "Какой талантливый!" },
-  { buryat: "Ямар ħонин бэ!", russian: "Как интересно!" },
+  { buryat: "Ямар һонин бэ!", russian: "Как интересно!" },
 ];
 
 // Compound number helpers
@@ -977,7 +977,7 @@ export default function PracticePage() {
         {/* Flip card */}
         <div className="flex-1 flex flex-col items-center justify-center px-5 py-3">
           <div
-            className="flip-card w-full cursor-pointer select-none"
+            className="flip-card w-full md:max-w-[540px] cursor-pointer select-none"
             style={{height:290, touchAction:"none"}}
             onPointerDown={handlePointerDown}
             onPointerMove={handlePointerMove}
@@ -1052,7 +1052,7 @@ export default function PracticePage() {
         </div>
 
         {/* Nav buttons */}
-        <div className="px-4 pb-24 pt-2">
+        <div className="px-4 pb-24 pt-2 md:max-w-[540px] md:mx-auto">
           <div className="flex gap-3">
             {cardIndex>0 && (
               <button onClick={handleStudyPrev}
@@ -1117,7 +1117,7 @@ export default function PracticePage() {
         </div>
 
         {/* Question */}
-        <div className="px-5 pt-4 pb-3">
+        <div className="px-5 pt-4 pb-3 md:max-w-[540px] md:mx-auto">
           <p className="text-xs font-bold uppercase tracking-widest mb-3 text-center" style={{color:"#94a3b8"}}>
             Переведи на русский:
           </p>
@@ -1131,7 +1131,7 @@ export default function PracticePage() {
         </div>
 
         {/* Options */}
-        <div className="flex-1 px-5 flex flex-col gap-2.5 pb-3">
+        <div className="flex-1 px-5 flex flex-col gap-2.5 pb-3 md:max-w-[540px] md:mx-auto">
           {quizOptions.map(opt=>(
             <button key={opt} onClick={()=>handleQuizAnswer(opt)} disabled={quizAnswered}
               className="w-full py-3.5 px-5 rounded-2xl font-semibold text-base transition-all duration-150 active:scale-97 flex items-center justify-between"
@@ -1142,7 +1142,7 @@ export default function PracticePage() {
           ))}
         </div>
 
-        <div className="px-5 pb-24 pt-1">
+        <div className="px-5 pb-24 pt-1 md:max-w-[540px] md:mx-auto">
           {quizAnswered && (
             <button onClick={handleQuizNext}
               className="w-full py-4 rounded-2xl font-bold text-white text-base transition active:scale-95 card-reveal"
