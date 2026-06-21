@@ -171,6 +171,13 @@ export default function HomePage() {
               desc: "Статья в Википедии",
               bg: "#fef9c3",
             },
+            {
+              href: "https://burunen.ru/bur/",
+              emoji: "📰",
+              title: "Буруунэн",
+              desc: "Новости на бурятском языке",
+              bg: "#fdf4ff",
+            },
           ].map((link) => (
             <a
               key={link.href}
