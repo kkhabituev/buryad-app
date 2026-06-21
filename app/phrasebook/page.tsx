@@ -142,7 +142,7 @@ export default function PhrasebookPage() {
           className="sticky top-0 z-10 py-3"
           style={{ background: "rgba(248,250,255,0.97)", backdropFilter: "blur(10px)", borderBottom: "1px solid #e2e8f0" }}
         >
-          <div style={{ overflowX: "auto", display: "flex", gap: 8, padding: "0 16px", scrollbarWidth: "none" }}>
+          <div className="md:max-w-3xl md:mx-auto" style={{ overflowX: "auto", display: "flex", gap: 8, padding: "0 16px", scrollbarWidth: "none" }}>
             {phrasebookData.categories.map((cat) => (
               <button
                 key={cat.id}
@@ -162,7 +162,7 @@ export default function PhrasebookPage() {
         </div>
       )}
 
-      <div className="px-4 pt-4 pb-24">
+      <div className="px-4 pt-4 pb-24 md:max-w-3xl md:mx-auto">
 
         {/* ── SEARCH RESULTS ─────────────────────────────────────── */}
         {isSearching && (

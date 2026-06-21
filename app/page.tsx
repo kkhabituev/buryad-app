@@ -74,13 +74,13 @@ export default function HomePage() {
       </div>
 
       {/* SECTIONS */}
-      <div className="px-4 pt-5 pb-8">
+      <div className="px-4 pt-5 pb-8 md:max-w-3xl md:mx-auto">
         <p className="text-xs font-bold uppercase tracking-widest mb-3" style={{ color: "#94a3b8" }}>
           Разделы
         </p>
 
-        {/* 2×2 grid */}
-        <div className="grid grid-cols-2 gap-3 mb-3">
+        {/* 2×2 grid → 4 columns on desktop */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-3">
           {sections.map((s) => (
             <Link
               key={s.href}
@@ -134,7 +134,7 @@ export default function HomePage() {
               Практика · Дасхал
             </p>
             <p className="text-xs mt-0.5" style={{ color: "rgba(255,255,255,0.85)" }}>
-              20 наборов флэш-карточек · обучение и проверка
+              36 наборов флэш-карточек · слова, фразы и грамматика
             </p>
           </div>
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" className="flex-shrink-0">
@@ -144,7 +144,7 @@ export default function HomePage() {
       </div>
 
       {/* USEFUL LINKS */}
-      <div className="px-4 pb-28">
+      <div className="px-4 pb-28 md:max-w-3xl md:mx-auto md:pb-12">
         <p className="text-xs font-bold uppercase tracking-widest mb-3" style={{ color: "#94a3b8" }}>
           Полезные ссылки
         </p>

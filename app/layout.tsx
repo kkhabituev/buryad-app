@@ -45,7 +45,7 @@ export default function RootLayout({
     <html lang="ru" className={`${nunito.variable} ${playfair.variable}`}>
       <head />
       <body style={{ fontFamily: "var(--font-nunito), Nunito, sans-serif" }}>
-        <main className="pb-20 min-h-screen" style={{ background: "#faf8f4" }}>
+        <main className="pb-20 md:pb-8 md:pt-16 min-h-screen" style={{ background: "#faf8f4" }}>
           {children}
         </main>
         <BottomNav />

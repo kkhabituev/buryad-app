@@ -483,8 +483,9 @@ export default function TopicsPage() {
 
       {/* Back button (when topic selected) */}
       {topicTab !== null && (
-        <div className="sticky top-0 z-10 px-4 py-2.5 flex items-center gap-2"
+        <div className="sticky top-0 z-10"
           style={{ background: "rgba(248,250,255,0.97)", backdropFilter: "blur(10px)", borderBottom: "1px solid #e2e8f0" }}>
+        <div className="px-4 py-2.5 flex items-center gap-2 md:max-w-3xl md:mx-auto">
           <button
             onClick={() => setTopicTab(null)}
             className="flex items-center gap-1.5 rounded-xl px-3 py-1.5 active:scale-95 transition-all text-sm font-bold"
@@ -500,11 +501,12 @@ export default function TopicsPage() {
             </span>
           )}
         </div>
+        </div>
       )}
 
       {/* ── GROUP SELECTOR ──────────────────────────────────────── */}
       {topicTab === null && (
-        <div className="px-4 pt-4 pb-24 page-enter">
+        <div className="px-4 pt-4 pb-24 page-enter md:max-w-3xl md:mx-auto">
           {TOPIC_GROUPS.map((group) => (
             <div key={group.title} className="mb-6">
               <p className="text-xs font-bold uppercase tracking-widest mb-2.5"
@@ -535,7 +537,7 @@ export default function TopicsPage() {
 
       {/* ── ЧИСЛА ──────────────────────────────────────────────── */}
       {topicTab === "numbers" && (
-        <div>
+        <div className="md:max-w-3xl md:mx-auto">
           <div className="px-4 pt-3 flex gap-2">
             {(["units", "tens", "large"] as NumberTab[]).map((id, i) => {
               const labels = ["1 – 10", "Десятки", "Крупные"];
@@ -588,9 +590,9 @@ export default function TopicsPage() {
 
       {/* ── ЦВЕТА ──────────────────────────────────────────────── */}
       {topicTab === "colors" && (
-        <div className="px-4 pt-4 pb-24">
+        <div className="px-4 pt-4 pb-24 md:max-w-3xl md:mx-auto">
           <p className="text-xs font-bold uppercase tracking-widest mb-3" style={{ color: "#94a3b8" }}>Үнгэнүүд — цвета по-бурятски</p>
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
             {COLORS.map((c) => (
               <div key={c.ru} className="rounded-2xl overflow-hidden"
                 style={{ boxShadow: "0 2px 12px rgba(0,0,0,0.08)", border: c.light ? "1.5px solid #e2e8f0" : "none" }}>
@@ -613,9 +615,9 @@ export default function TopicsPage() {
 
       {/* ── ЖИВОТНЫЕ ───────────────────────────────────────────── */}
       {topicTab === "animals" && (
-        <div className="px-4 pt-4 pb-24">
+        <div className="px-4 pt-4 pb-24 md:max-w-3xl md:mx-auto">
           <p className="text-xs font-bold uppercase tracking-widest mb-3" style={{ color: "#94a3b8" }}>Амитад — животные по-бурятски</p>
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
             {ANIMALS.map((a) => (
               <div key={a.ru} className="rounded-2xl overflow-hidden" style={{ boxShadow: "0 4px 16px rgba(0,0,0,0.1)" }}>
                 <div style={{ background: `linear-gradient(140deg, ${a.from} 0%, ${a.to} 100%)`, height: 96, display: "flex", alignItems: "center", justifyContent: "center" }}>
@@ -633,9 +635,9 @@ export default function TopicsPage() {
 
       {/* ── СЕМЬЯ ──────────────────────────────────────────────── */}
       {topicTab === "family" && (
-        <div className="px-4 pt-4 pb-24">
+        <div className="px-4 pt-4 pb-24 md:max-w-3xl md:mx-auto">
           <p className="text-xs font-bold uppercase tracking-widest mb-3" style={{ color: "#94a3b8" }}>Бүлэ — семья по-бурятски</p>
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
             {FAMILY.map((f) => (
               <div key={f.ru} className="rounded-2xl p-4 flex flex-col items-center text-center"
                 style={{ background: "linear-gradient(145deg, #fef9ee 0%, #fef3c7 100%)", border: "1.5px solid #fde68a", boxShadow: "0 2px 12px rgba(251,191,36,0.12)" }}>
@@ -656,9 +658,9 @@ export default function TopicsPage() {
 
       {/* ── ЕДА ────────────────────────────────────────────────── */}
       {topicTab === "food" && (
-        <div className="px-4 pt-4 pb-24">
+        <div className="px-4 pt-4 pb-24 md:max-w-3xl md:mx-auto">
           <p className="text-xs font-bold uppercase tracking-widest mb-3" style={{ color: "#94a3b8" }}>Эдеэн — еда по-бурятски</p>
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
             {FOOD.map((f) => (
               <div key={f.ru} className="rounded-2xl overflow-hidden"
                 style={{ boxShadow: "0 2px 12px rgba(0,0,0,0.08)", border: "1.5px solid #f1f5f9" }}>
@@ -681,9 +683,9 @@ export default function TopicsPage() {
 
       {/* ── ТЕЛО ───────────────────────────────────────────────── */}
       {topicTab === "body" && (
-        <div className="px-4 pt-4 pb-24">
+        <div className="px-4 pt-4 pb-24 md:max-w-3xl md:mx-auto">
           <p className="text-xs font-bold uppercase tracking-widest mb-3" style={{ color: "#94a3b8" }}>Бэе — тело по-бурятски</p>
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
             {BODY.map((b) => (
               <div key={b.ru} className="rounded-2xl p-4 flex flex-col items-center text-center"
                 style={{ background: "linear-gradient(145deg, #fff8f5 0%, #fde8d8 100%)", border: "1.5px solid #fed7aa", boxShadow: "0 2px 10px rgba(251,146,60,0.1)" }}>
@@ -698,9 +700,9 @@ export default function TopicsPage() {
 
       {/* ── ПРИРОДА ────────────────────────────────────────────── */}
       {topicTab === "nature" && (
-        <div className="px-4 pt-4 pb-24">
+        <div className="px-4 pt-4 pb-24 md:max-w-3xl md:mx-auto">
           <p className="text-xs font-bold uppercase tracking-widest mb-3" style={{ color: "#94a3b8" }}>Байгаали — природа по-бурятски</p>
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
             {NATURE.map((n) => (
               <div key={n.ru} className="rounded-2xl overflow-hidden" style={{ boxShadow: "0 4px 16px rgba(0,0,0,0.1)" }}>
                 <div style={{ background: `linear-gradient(140deg, ${n.from} 0%, ${n.to} 100%)`, height: 92, display: "flex", alignItems: "center", justifyContent: "center" }}>
@@ -724,9 +726,9 @@ export default function TopicsPage() {
 
       {/* ── ПОГОДА ─────────────────────────────────────────────── */}
       {topicTab === "weather" && (
-        <div className="px-4 pt-4 pb-24">
+        <div className="px-4 pt-4 pb-24 md:max-w-3xl md:mx-auto">
           <p className="text-xs font-bold uppercase tracking-widest mb-3" style={{ color: "#94a3b8" }}>Агаар — погода по-бурятски</p>
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
             {WEATHER.map((w) => (
               <div key={w.ru}
                 className={wiggleKey === w.ru ? "wiggle-anim" : ""}
@@ -748,9 +750,9 @@ export default function TopicsPage() {
 
       {/* ── ЭМОЦИИ ─────────────────────────────────────────────── */}
       {topicTab === "emotions" && (
-        <div className="px-4 pt-4 pb-24">
+        <div className="px-4 pt-4 pb-24 md:max-w-3xl md:mx-auto">
           <p className="text-xs font-bold uppercase tracking-widest mb-3" style={{ color: "#94a3b8" }}>Мэдэрэл — эмоции по-бурятски</p>
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
             {EMOTIONS.map((e) => (
               <div key={e.ru} className="rounded-2xl p-4 flex flex-col items-center text-center"
                 style={{ background: e.bg, border: `1.5px solid ${e.border}`, boxShadow: "0 2px 12px rgba(0,0,0,0.06)" }}>
@@ -771,7 +773,7 @@ export default function TopicsPage() {
 
       {/* ── ВРЕМЯ ──────────────────────────────────────────────── */}
       {topicTab === "time" && (
-        <div className="px-4 pt-4 pb-24">
+        <div className="px-4 pt-4 pb-24 md:max-w-3xl md:mx-auto">
           <p className="text-xs font-bold uppercase tracking-widest mb-3" style={{ color: "#94a3b8" }}>Саг — время по-бурятски</p>
           <div className="grid grid-cols-2 gap-3 mb-5">
             {TIME_OF_DAY.map((t) => (
@@ -803,7 +805,7 @@ export default function TopicsPage() {
 
       {/* ── ВОПРОСИТЕЛЬНЫЕ СЛОВА ───────────────────────────────── */}
       {topicTab === "questions" && (
-        <div className="px-4 pt-4 pb-24">
+        <div className="px-4 pt-4 pb-24 md:max-w-3xl md:mx-auto">
           <p className="text-xs font-bold uppercase tracking-widest mb-3" style={{ color: "#94a3b8" }}>Асуудалай үгэнүүд — вопросительные слова</p>
           <SimpleList items={QUESTIONS} />
           <div className="mt-5 rounded-2xl p-4" style={{ background: "#eff6ff", border: "1.5px solid #bfdbfe" }}>
@@ -817,7 +819,7 @@ export default function TopicsPage() {
 
       {/* ── ПРИЛАГАТЕЛЬНЫЕ ─────────────────────────────────────── */}
       {topicTab === "adjectives" && (
-        <div className="px-4 pt-4 pb-24">
+        <div className="px-4 pt-4 pb-24 md:max-w-3xl md:mx-auto">
           <p className="text-xs font-bold uppercase tracking-widest mb-3" style={{ color: "#94a3b8" }}>Тэмдэгэй нэрэнүүд — прилагательные</p>
           <div className="grid grid-cols-2 gap-2.5">
             {ADJECTIVES.map((a) => (
@@ -836,7 +838,7 @@ export default function TopicsPage() {
 
       {/* ── ОДЕЖДА ─────────────────────────────────────────────── */}
       {topicTab === "clothes" && (
-        <div className="px-4 pt-4 pb-24">
+        <div className="px-4 pt-4 pb-24 md:max-w-3xl md:mx-auto">
           <p className="text-xs font-bold uppercase tracking-widest mb-3" style={{ color: "#94a3b8" }}>Хубсаhан — одежда по-бурятски</p>
           <SimpleList items={CLOTHES} />
           <div className="mt-5 rounded-2xl p-4" style={{ background: "linear-gradient(135deg, #fdf4ff, #ede9fe)", border: "1.5px solid #ddd6fe" }}>
@@ -850,7 +852,7 @@ export default function TopicsPage() {
 
       {/* ── ДОМ И БЫТ ──────────────────────────────────────────── */}
       {topicTab === "home" && (
-        <div className="px-4 pt-4 pb-24">
+        <div className="px-4 pt-4 pb-24 md:max-w-3xl md:mx-auto">
           <p className="text-xs font-bold uppercase tracking-widest mb-3" style={{ color: "#94a3b8" }}>Гэр — дом по-бурятски</p>
           <SimpleList items={HOME_ITEMS} />
           <div className="mt-5 rounded-2xl p-4" style={{ background: "linear-gradient(135deg, #fefce8, #fef9c3)", border: "1.5px solid #fde68a" }}>
@@ -864,7 +866,7 @@ export default function TopicsPage() {
 
       {/* ── ГОРОД И НАПРАВЛЕНИЯ ────────────────────────────────── */}
       {topicTab === "city" && (
-        <div className="px-4 pt-4 pb-24">
+        <div className="px-4 pt-4 pb-24 md:max-w-3xl md:mx-auto">
           <p className="text-xs font-bold uppercase tracking-widest mb-3" style={{ color: "#94a3b8" }}>Хото — город по-бурятски</p>
           <SimpleList items={CITY} />
           <div className="mt-5 rounded-2xl p-4" style={{ background: "linear-gradient(135deg, #f0f9ff, #e0f2fe)", border: "1.5px solid #bae6fd" }}>
@@ -878,7 +880,7 @@ export default function TopicsPage() {
 
       {/* ── ДЕНЬГИ И ПОКУПКИ ───────────────────────────────────── */}
       {topicTab === "money" && (
-        <div className="px-4 pt-4 pb-24">
+        <div className="px-4 pt-4 pb-24 md:max-w-3xl md:mx-auto">
           <p className="text-xs font-bold uppercase tracking-widest mb-3" style={{ color: "#94a3b8" }}>Мүнгэн — деньги по-бурятски</p>
           <SimpleList items={MONEY} />
           <div className="mt-5 rounded-2xl p-4" style={{ background: "linear-gradient(135deg, #fefce8, #fef9c3)", border: "1.5px solid #fde68a" }}>
@@ -892,7 +894,7 @@ export default function TopicsPage() {
 
       {/* ── ШКОЛА И УЧЁБА ──────────────────────────────────────── */}
       {topicTab === "school" && (
-        <div className="px-4 pt-4 pb-24">
+        <div className="px-4 pt-4 pb-24 md:max-w-3xl md:mx-auto">
           <p className="text-xs font-bold uppercase tracking-widest mb-3" style={{ color: "#94a3b8" }}>hургуули — школа по-бурятски</p>
           <SimpleList items={SCHOOL} />
           <div className="mt-5 rounded-2xl p-4" style={{ background: "linear-gradient(135deg, #eff6ff, #dbeafe)", border: "1.5px solid #bfdbfe" }}>
@@ -906,7 +908,7 @@ export default function TopicsPage() {
 
       {/* ── ПРАЗДНИКИ ──────────────────────────────────────────── */}
       {topicTab === "holidays" && (
-        <div className="px-4 pt-4 pb-24">
+        <div className="px-4 pt-4 pb-24 md:max-w-3xl md:mx-auto">
           <p className="text-xs font-bold uppercase tracking-widest mb-3" style={{ color: "#94a3b8" }}>hайндэрнүүд — праздники по-бурятски</p>
           <div className="grid grid-cols-1 gap-3">
             {HOLIDAYS.map((h) => (
@@ -931,9 +933,9 @@ export default function TopicsPage() {
 
       {/* ── МУЗЫКА И ТВОРЧЕСТВО ────────────────────────────────── */}
       {topicTab === "music" && (
-        <div className="px-4 pt-4 pb-24">
+        <div className="px-4 pt-4 pb-24 md:max-w-3xl md:mx-auto">
           <p className="text-xs font-bold uppercase tracking-widest mb-3" style={{ color: "#94a3b8" }}>Хүгжэм — музыка по-бурятски</p>
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
             {MUSIC.map((m) => (
               <div key={m.ru} className="rounded-2xl overflow-hidden" style={{ boxShadow: "0 4px 16px rgba(0,0,0,0.1)" }}>
                 <div style={{ background: `linear-gradient(140deg, ${m.from} 0%, ${m.to} 100%)`, height: 92, display: "flex", alignItems: "center", justifyContent: "center" }}>
@@ -957,9 +959,9 @@ export default function TopicsPage() {
 
       {/* ── СПОРТ ──────────────────────────────────────────────── */}
       {topicTab === "sport" && (
-        <div className="px-4 pt-4 pb-24">
+        <div className="px-4 pt-4 pb-24 md:max-w-3xl md:mx-auto">
           <p className="text-xs font-bold uppercase tracking-widest mb-3" style={{ color: "#94a3b8" }}>Спорт — спорт по-бурятски</p>
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
             {SPORT.map((s) => (
               <div key={s.ru} className="rounded-2xl overflow-hidden" style={{ boxShadow: "0 4px 16px rgba(0,0,0,0.1)" }}>
                 <div style={{ background: `linear-gradient(140deg, ${s.from} 0%, ${s.to} 100%)`, height: 92, display: "flex", alignItems: "center", justifyContent: "center" }}>
@@ -983,7 +985,7 @@ export default function TopicsPage() {
 
       {/* ── ГЛАГОЛЫ — ДВИЖЕНИЕ ─────────────────────────────────── */}
       {topicTab === "v_movement" && (
-        <div className="px-4 pt-4 pb-24">
+        <div className="px-4 pt-4 pb-24 md:max-w-3xl md:mx-auto">
           <p className="text-xs font-bold uppercase tracking-widest mb-3" style={{ color: "#94a3b8" }}>Движение и действие</p>
           <VerbList verbs={V_MOVEMENT} />
           <div className="mt-5 rounded-2xl p-4" style={{ background: "linear-gradient(135deg, #ecfdf5, #d1fae5)", border: "1.5px solid #a7f3d0" }}>
@@ -997,7 +999,7 @@ export default function TopicsPage() {
 
       {/* ── ГЛАГОЛЫ — ОБЩЕНИЕ ──────────────────────────────────── */}
       {topicTab === "v_communication" && (
-        <div className="px-4 pt-4 pb-24">
+        <div className="px-4 pt-4 pb-24 md:max-w-3xl md:mx-auto">
           <p className="text-xs font-bold uppercase tracking-widest mb-3" style={{ color: "#94a3b8" }}>Общение и знание</p>
           <VerbList verbs={V_COMMUNICATION} />
           <div className="mt-5 rounded-2xl p-4" style={{ background: "linear-gradient(135deg, #eff6ff, #dbeafe)", border: "1.5px solid #bfdbfe" }}>
@@ -1011,7 +1013,7 @@ export default function TopicsPage() {
 
       {/* ── ГЛАГОЛЫ — БЫТ ──────────────────────────────────────── */}
       {topicTab === "v_life" && (
-        <div className="px-4 pt-4 pb-24">
+        <div className="px-4 pt-4 pb-24 md:max-w-3xl md:mx-auto">
           <p className="text-xs font-bold uppercase tracking-widest mb-3" style={{ color: "#94a3b8" }}>Быт и повседневность</p>
           <VerbList verbs={V_LIFE} />
           <div className="mt-5 rounded-2xl p-4" style={{ background: "linear-gradient(135deg, #fff7ed, #ffedd5)", border: "1.5px solid #fed7aa" }}>
@@ -1025,7 +1027,7 @@ export default function TopicsPage() {
 
       {/* ── ГЛАГОЛЫ — ВОСПРИЯТИЕ ───────────────────────────────── */}
       {topicTab === "v_perception" && (
-        <div className="px-4 pt-4 pb-24">
+        <div className="px-4 pt-4 pb-24 md:max-w-3xl md:mx-auto">
           <p className="text-xs font-bold uppercase tracking-widest mb-3" style={{ color: "#94a3b8" }}>Восприятие и чувства</p>
           <VerbList verbs={V_PERCEPTION} />
           <div className="mt-5 rounded-2xl p-4" style={{ background: "linear-gradient(135deg, #fdf2f8, #fce7f3)", border: "1.5px solid #f9a8d4" }}>
@@ -1039,7 +1041,7 @@ export default function TopicsPage() {
 
       {/* ── ГЛАГОЛЫ — ТВОРЧЕСТВО ───────────────────────────────── */}
       {topicTab === "v_creative" && (
-        <div className="px-4 pt-4 pb-24">
+        <div className="px-4 pt-4 pb-24 md:max-w-3xl md:mx-auto">
           <p className="text-xs font-bold uppercase tracking-widest mb-3" style={{ color: "#94a3b8" }}>Творчество</p>
           <VerbList verbs={V_CREATIVE} />
           <div className="mt-5 rounded-2xl p-4" style={{ background: "linear-gradient(135deg, #fdf4ff, #ede9fe)", border: "1.5px solid #ddd6fe" }}>
@@ -1053,7 +1055,7 @@ export default function TopicsPage() {
 
       {/* ── ГЛАГОЛЫ — РУТИНА ───────────────────────────────────── */}
       {topicTab === "v_routine" && (
-        <div className="px-4 pt-4 pb-24">
+        <div className="px-4 pt-4 pb-24 md:max-w-3xl md:mx-auto">
           <p className="text-xs font-bold uppercase tracking-widest mb-3" style={{ color: "#94a3b8" }}>Рутина</p>
           <VerbList verbs={V_ROUTINE} />
           <div className="mt-5 rounded-2xl p-4" style={{ background: "linear-gradient(135deg, #ecfdf5, #d1fae5)", border: "1.5px solid #a7f3d0" }}>
@@ -1067,7 +1069,7 @@ export default function TopicsPage() {
 
       {/* ── ГЛАГОЛЫ — МОДАЛЬНЫЕ ────────────────────────────────── */}
       {topicTab === "v_modal" && (
-        <div className="px-4 pt-4 pb-24">
+        <div className="px-4 pt-4 pb-24 md:max-w-3xl md:mx-auto">
           <p className="text-xs font-bold uppercase tracking-widest mb-3" style={{ color: "#94a3b8" }}>Модальные конструкции</p>
           <VerbList verbs={V_MODAL} />
           <div className="mt-5 rounded-2xl p-4" style={{ background: "linear-gradient(135deg, #eff6ff, #dbeafe)", border: "1.5px solid #bfdbfe" }}>

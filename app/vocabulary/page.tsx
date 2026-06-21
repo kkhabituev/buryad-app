@@ -279,7 +279,7 @@ export default function VocabularyPage() {
         <p className="text-sm mt-1" style={{ color: "rgba(255,255,255,0.65)" }}>Перевод любого слова</p>
       </div>
 
-      <div className="px-4 pt-4 pb-24">
+      <div className="px-4 pt-4 pb-24 md:max-w-3xl md:mx-auto">
 
         {/* Direction toggle */}
         <div className="flex rounded-2xl p-1 mb-4" style={{ background: "#e2e8f0" }}>

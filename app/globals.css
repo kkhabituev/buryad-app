@@ -78,6 +78,9 @@
 .bottom-nav {
   padding-bottom: max(8px, env(safe-area-inset-bottom));
 }
+@media (min-width: 768px) {
+  .bottom-nav { padding-bottom: 0; }
+}
 
 /* ===== PAGE ENTER ===== */
 .page-enter {

@@ -154,8 +154,9 @@ export default function GrammarPage() {
       </div>
 
       {/* Tabs */}
-      <div className="sticky top-0 z-10 px-4 py-3 flex gap-2"
+      <div className="sticky top-0 z-10"
         style={{ background: "rgba(248,250,255,0.95)", backdropFilter: "blur(10px)", borderBottom: "1px solid #e2e8f0" }}>
+        <div className="px-4 py-3 flex gap-2 md:max-w-3xl md:mx-auto">
         {tabs.map((tab) => (
           <button key={tab.id} onClick={() => setActiveTab(tab.id)}
             className="flex-1 flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-full text-sm font-bold transition-all duration-200 active:scale-95"
@@ -168,9 +169,10 @@ export default function GrammarPage() {
             <span>{tab.label}</span>
           </button>
         ))}
+        </div>
       </div>
 
-      <div className="px-4 pt-5 pb-8">
+      <div className="px-4 pt-5 pb-8 md:max-w-3xl md:mx-auto">
 
         {/* ── МЕСТОИМЕНИЯ (личные + притяжательные) ── */}
         {activeTab === "pronouns" && (

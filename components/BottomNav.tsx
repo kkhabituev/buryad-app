@@ -79,47 +79,51 @@ export default function BottomNav() {
 
   return (
     <nav
-      className="fixed bottom-0 left-0 right-0 z-50 bottom-nav"
+      className="fixed bottom-0 left-0 right-0 z-50 bottom-nav md:bottom-auto md:top-0"
       style={{
         background: "rgba(255,255,255,0.97)",
         backdropFilter: "blur(12px)",
         WebkitBackdropFilter: "blur(12px)",
-        borderTop: "1px solid rgba(226,232,240,0.8)",
       }}
     >
-      <div className="flex items-stretch max-w-lg mx-auto">
-        {navItems.map((item) => {
-          const active = item.exact
-            ? pathname === item.href
-            : pathname === item.href || pathname.startsWith(item.href + "/");
-          const isPractice = item.href === "/practice";
-          const activeColor = isPractice ? "#d97706" : "#1d4ed8";
+      <div
+        className="border-t md:border-t-0 md:border-b"
+        style={{ borderColor: "rgba(226,232,240,0.8)" }}
+      >
+        <div className="flex items-stretch md:items-center max-w-lg md:max-w-4xl mx-auto md:px-4">
+          {navItems.map((item) => {
+            const active = item.exact
+              ? pathname === item.href
+              : pathname === item.href || pathname.startsWith(item.href + "/");
+            const isPractice = item.href === "/practice";
+            const activeColor = isPractice ? "#d97706" : "#1d4ed8";
 
-          return (
-            <Link
-              key={item.href}
-              href={item.href}
-              className="flex flex-col items-center justify-center flex-1 py-2 gap-0.5 transition-all duration-200 active:scale-90 relative"
-              style={{ minHeight: 54 }}
-            >
-              {active && (
-                <span
-                  className="absolute top-0 left-1/2 -translate-x-1/2 w-6 h-0.5 rounded-full"
-                  style={{ background: activeColor }}
-                />
-              )}
-              <span className="flex items-center justify-center w-6 h-6">
-                {item.icon(active)}
-              </span>
-              <span
-                className="text-[9px] font-bold leading-tight"
-                style={{ color: active ? activeColor : "#94a3b8" }}
+            return (
+              <Link
+                key={item.href}
+                href={item.href}
+                className="flex flex-col md:flex-row items-center justify-center flex-1 md:flex-none py-2 md:py-3 md:px-4 gap-0.5 md:gap-2 transition-all duration-200 active:scale-90 relative"
+                style={{ minHeight: 54 }}
               >
-                {item.label}
-              </span>
-            </Link>
-          );
-        })}
+                {active && (
+                  <span
+                    className="absolute top-0 md:top-auto md:bottom-0 left-1/2 -translate-x-1/2 w-6 h-0.5 rounded-full"
+                    style={{ background: activeColor }}
+                  />
+                )}
+                <span className="flex items-center justify-center w-6 h-6">
+                  {item.icon(active)}
+                </span>
+                <span
+                  className="text-[9px] md:text-xs font-bold leading-tight"
+                  style={{ color: active ? activeColor : "#94a3b8" }}
+                >
+                  {item.label}
+                </span>
+              </Link>
+            );
+          })}
+        </div>
       </div>
     </nav>
   );
