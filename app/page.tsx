@@ -175,6 +175,20 @@ export default function HomePage() {
               bg: "#eff6ff",
             },
             {
+              href: "https://nom.buryat-lang.ru/nom.pdf",
+              emoji: "📄",
+              title: "Учебник — PDF",
+              desc: "Скачать полный учебник",
+              bg: "#fff1f2",
+            },
+            {
+              href: "https://t.me/BuryatWordBot",
+              emoji: "✈️",
+              title: "Бурятское слово дня",
+              desc: "Telegram-бот · слово, аудио, пример",
+              bg: "#f0f9ff",
+            },
+            {
               href: "https://ru.wikipedia.org/wiki/%D0%91%D1%83%D1%80%D1%8F%D1%82%D1%81%D0%BA%D0%B8%D0%B9_%D1%8F%D0%B7%D1%8B%D0%BA",
               emoji: "🌐",
               title: "Бурятский язык",
