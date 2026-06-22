@@ -1,8 +1,10 @@
 "use client";
 
 import Link from "next/link";
+import { useState, useRef } from "react";
 
 type Word = { buryat: string; russian: string; category: string; emoji: string };
+type Ripple = { id: number; x: number; y: number };
 
 const WORD_POOL: Word[] = [
   // Цвета
@@ -140,24 +142,64 @@ const WORD_POOL: Word[] = [
   { buryat: "дэлгүүр",    russian: "магазин",    category: "Деньги",        emoji: "🛒" },
 ];
 
+const SHADOW = "0 1px 3px rgba(0,0,0,0.45)";
+
 export default function WordOfDay() {
   const dayIndex = Math.floor(Date.now() / 86400000);
   const word = WORD_POOL[dayIndex % WORD_POOL.length];
-
   const dateStr = new Date().toLocaleDateString("ru-RU", { day: "numeric", month: "long" });
 
+  const [ripples, setRipples] = useState<Ripple[]>([]);
+  const lastPosRef = useRef<{ x: number; y: number } | null>(null);
+
+  const spawnRipple = (clientX: number, clientY: number, rect: DOMRect) => {
+    if (typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const id = Date.now() + Math.random();
+    setRipples(r => [...r, { id, x: clientX - rect.left, y: clientY - rect.top }]);
+    setTimeout(() => setRipples(r => r.filter(rp => rp.id !== id)), 950);
+  };
+
+  const handlePointerDown = (e: React.PointerEvent<HTMLDivElement>) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    spawnRipple(e.clientX, e.clientY, rect);
+    lastPosRef.current = { x: e.clientX, y: e.clientY };
+  };
+
+  const handlePointerMove = (e: React.PointerEvent<HTMLDivElement>) => {
+    if (e.buttons === 0 || !lastPosRef.current) return;
+    const dx = e.clientX - lastPosRef.current.x;
+    const dy = e.clientY - lastPosRef.current.y;
+    if (dx * dx + dy * dy >= 60 * 60) {
+      const rect = e.currentTarget.getBoundingClientRect();
+      spawnRipple(e.clientX, e.clientY, rect);
+      lastPosRef.current = { x: e.clientX, y: e.clientY };
+    }
+  };
+
+  const handlePointerEnd = () => { lastPosRef.current = null; };
+
   return (
-    <div className="px-4 pt-4 pb-1 md:max-w-3xl md:mx-auto">
+    <div className="pt-4 pb-1 md:max-w-3xl md:mx-auto">
       <div
-        className="wod-card relative overflow-hidden rounded-3xl px-5 py-4"
-        style={{ boxShadow: "0 8px 32px -8px rgba(29,78,216,0.45)" }}
+        className="wod-card relative overflow-hidden rounded-none md:rounded-2xl px-5 py-4 select-none"
+        style={{ boxShadow: "0 6px 28px -6px rgba(120,53,15,0.55)", cursor: "default" }}
+        onPointerDown={handlePointerDown}
+        onPointerMove={handlePointerMove}
+        onPointerUp={handlePointerEnd}
+        onPointerLeave={handlePointerEnd}
+        onPointerCancel={handlePointerEnd}
       >
+        {/* Ripples */}
+        {ripples.map(rp => (
+          <div key={rp.id} className="wod-ripple" style={{ left: rp.x - 50, top: rp.y - 50 }} />
+        ))}
+
         {/* SVG noise overlay */}
         <svg
           aria-hidden="true"
           style={{
             position: "absolute", inset: 0, width: "100%", height: "100%",
-            opacity: 0.07, mixBlendMode: "overlay", pointerEvents: "none",
+            opacity: 0.08, mixBlendMode: "overlay", pointerEvents: "none",
           }}
         >
           <filter id="wod-noise-f">
@@ -169,10 +211,10 @@ export default function WordOfDay() {
 
         {/* Header row */}
         <div className="relative flex items-center justify-between mb-2">
-          <p className="text-xs font-bold uppercase tracking-widest" style={{ color: "rgba(255,255,255,0.6)" }}>
+          <p className="text-xs font-bold uppercase tracking-widest" style={{ color: "rgba(255,255,255,0.7)", textShadow: SHADOW }}>
             Үдэрэй үгэ · Слово дня
           </p>
-          <p className="text-xs font-semibold" style={{ color: "rgba(255,255,255,0.5)" }}>
+          <p className="text-xs font-semibold" style={{ color: "rgba(255,255,255,0.55)", textShadow: SHADOW }}>
             {dateStr}
           </p>
         </div>
@@ -186,7 +228,7 @@ export default function WordOfDay() {
         </p>
 
         {/* Russian translation */}
-        <p className="relative text-lg font-semibold mb-3" style={{ color: "rgba(255,255,255,0.88)" }}>
+        <p className="relative text-lg font-semibold mb-3" style={{ color: "rgba(255,255,255,0.9)", textShadow: SHADOW }}>
           {word.russian}
         </p>
 
@@ -194,14 +236,18 @@ export default function WordOfDay() {
         <div className="relative flex items-center justify-between">
           <span
             className="text-xs font-bold px-2.5 py-1 rounded-full"
-            style={{ background: "rgba(255,255,255,0.18)", color: "rgba(255,255,255,0.9)" }}
+            style={{
+              background: "rgba(0,0,0,0.22)",
+              color: "rgba(255,255,255,0.92)",
+              textShadow: SHADOW,
+            }}
           >
             {word.category}
           </span>
           <Link
             href="/topics"
             className="text-xs font-bold flex items-center gap-1 transition-opacity hover:opacity-80"
-            style={{ color: "rgba(255,255,255,0.85)" }}
+            style={{ color: "rgba(255,255,255,0.88)", textShadow: SHADOW }}
           >
             Ещё слова
             <svg width="12" height="12" viewBox="0 0 24 24" fill="none">

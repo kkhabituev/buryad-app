@@ -8,8 +8,10 @@ const sections = [
     sub: "Хэлэ зүй",
     desc: "Местоимения, глаголы и формы",
     emoji: "📚",
-    gradient: "linear-gradient(140deg, #1d4ed8 0%, #1e3a5f 100%)",
-    glow: "#1d4ed8",
+    badge: "linear-gradient(140deg, #1d4ed8 0%, #1e3a5f 100%)",
+    bg: "#eff6ff",
+    border: "#bfdbfe",
+    accent: "#1d4ed8",
   },
   {
     href: "/topics",
@@ -17,8 +19,10 @@ const sections = [
     sub: "Үгын бүлэг",
     desc: "Числа, цвета, животные",
     emoji: "🗂️",
-    gradient: "linear-gradient(140deg, #f97316 0%, #dc2626 100%)",
-    glow: "#f97316",
+    badge: "linear-gradient(140deg, #f97316 0%, #dc2626 100%)",
+    bg: "#fff7ed",
+    border: "#fed7aa",
+    accent: "#ea580c",
   },
   {
     href: "/vocabulary",
@@ -26,8 +30,10 @@ const sections = [
     sub: "Үгын сан",
     desc: "Перевод любого слова",
     emoji: "📖",
-    gradient: "linear-gradient(140deg, #0891b2 0%, #0e7490 100%)",
-    glow: "#0891b2",
+    badge: "linear-gradient(140deg, #0891b2 0%, #0e7490 100%)",
+    bg: "#ecfeff",
+    border: "#a5f3fc",
+    accent: "#0891b2",
   },
   {
     href: "/phrasebook",
@@ -35,8 +41,10 @@ const sections = [
     sub: "Хэлэлсэгшэ",
     desc: "Живые бурятские фразы",
     emoji: "💬",
-    gradient: "linear-gradient(140deg, #7c3aed 0%, #6d28d9 100%)",
-    glow: "#7c3aed",
+    badge: "linear-gradient(140deg, #7c3aed 0%, #6d28d9 100%)",
+    bg: "#f5f3ff",
+    border: "#ddd6fe",
+    accent: "#7c3aed",
   },
 ];
 
@@ -89,10 +97,10 @@ export default function HomePage() {
             <Link
               key={s.href}
               href={s.href}
-              className="relative rounded-2xl p-4 transition-all duration-200 active:scale-95"
+              className="relative rounded-2xl p-3.5 transition-all duration-200 active:scale-95"
               style={{
-                background: s.gradient,
-                boxShadow: `0 4px 20px -6px ${s.glow}66`,
+                background: s.bg,
+                border: `1.5px solid ${s.border}`,
                 minHeight: 140,
                 display: "flex",
                 flexDirection: "column",
@@ -100,18 +108,23 @@ export default function HomePage() {
               }}
             >
               <div>
-                <span className="text-3xl block mb-2">{s.emoji}</span>
                 <div
-                  className="text-base font-bold leading-tight text-white"
-                  style={{ fontFamily: '"Playfair Display", Georgia, serif' }}
+                  className="w-10 h-10 rounded-xl flex items-center justify-center text-xl mb-2.5 flex-shrink-0"
+                  style={{ background: s.badge }}
+                >
+                  {s.emoji}
+                </div>
+                <div
+                  className="text-sm font-bold leading-tight"
+                  style={{ color: "#0f172a", fontFamily: '"Playfair Display", Georgia, serif' }}
                 >
                   {s.title}
                 </div>
-                <div className="text-xs font-bold mt-0.5" style={{ color: "rgba(255,255,255,0.65)" }}>
+                <div className="text-xs font-semibold mt-0.5" style={{ color: s.accent, opacity: 0.75 }}>
                   {s.sub}
                 </div>
               </div>
-              <p className="text-xs leading-snug mt-2" style={{ color: "rgba(255,255,255,0.8)" }}>
+              <p className="text-xs leading-snug mt-2" style={{ color: "#64748b" }}>
                 {s.desc}
               </p>
             </Link>
